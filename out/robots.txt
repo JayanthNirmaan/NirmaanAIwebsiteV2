@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nirmaan.education/sitemap.xml
