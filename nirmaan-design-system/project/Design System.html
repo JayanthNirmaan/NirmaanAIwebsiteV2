@@ -1,0 +1,1598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nirmaan — Design System</title>
+<!-- SigIQ uses Inter as the sole type family; italic for emphasis. -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     NIRMAAN DESIGN TOKENS
+     ============================================================ */
+  :root {
+    /* Core brand — sampled from logo */
+    --orange-50:  #FFF4EE;
+    --orange-100: #FFE3D1;
+    --orange-200: #FFC6A3;
+    --orange-300: #FFA274;
+    --orange-400: #FF8448;
+    --orange-500: #FF5A1F;   /* primary / logo deep orange */
+    --orange-600: #EA4A0E;
+    --orange-700: #C23A05;
+    --orange-800: #8F2C06;
+
+    /* Neutral ink (from logo wordmark ~ #3C3C3C) */
+    --ink-950: #0A0A0B;
+    --ink-900: #121214;
+    --ink-800: #1C1C20;
+    --ink-700: #2A2A2F;
+    --ink-600: #3C3C42;
+    --ink-500: #5B5B63;
+    --ink-400: #8A8A92;
+    --ink-300: #B5B5BB;
+    --ink-200: #DADADE;
+    --ink-100: #EDEDF0;
+    --ink-50:  #F6F6F7;
+    --paper:   #FBFAF7;   /* warm off-white */
+    --white:   #FFFFFF;
+
+    /* Semantic */
+    --bg: var(--paper);
+    --fg: var(--ink-900);
+    --muted: var(--ink-500);
+    --line: #E7E4DF;
+    --accent: var(--orange-500);
+    --accent-soft: var(--orange-100);
+
+    /* Secondary subtle accents — never dominant, used for tint + tag coloring */
+    --sky-50:  #EAF4FF;
+    --sky-200: #B8D8FA;
+    --sky-500: #3E86E0;
+    --violet-50:  #F1EEFB;
+    --violet-200: #CFC4EF;
+    --violet-500: #6F5BD0;
+    --mint-50:  #E6F4EC;
+    --mint-200: #B4DFC3;
+    --mint-500: #3DA069;
+    --rose-50:  #FBECEF;
+    --rose-200: #F3C4CE;
+    --rose-500: #C95571;
+    --sand-50:  #F5EFE6;
+    --sand-200: #E6D5B8;
+
+    /* Type — SigIQ uses a single sans with italic for emphasis */
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Inter", ui-monospace, Menlo, monospace;
+
+    /* Radii + shadows */
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --r-pill: 999px;
+    --shadow-sm: 0 1px 2px rgba(16,16,18,.05), 0 0 0 1px rgba(16,16,18,.04);
+    --shadow-md: 0 8px 24px -8px rgba(16,16,18,.18), 0 0 0 1px rgba(16,16,18,.05);
+    --shadow-lg: 0 24px 60px -16px rgba(16,16,18,.25), 0 0 0 1px rgba(16,16,18,.06);
+    --shadow-glow: 0 0 0 1px rgba(255,90,31,.25), 0 10px 40px -8px rgba(255,90,31,.35);
+  }
+
+  /* ============================================================
+     RESET
+     ============================================================ */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  img { max-width: 100%; display: block; }
+  h1,h2,h3,h4,h5,h6 { margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+
+  /* ============================================================
+     TYPE SCALE — SigIQ-style serif italic emphasis
+     ============================================================ */
+  .t-display {
+    font-size: clamp(56px, 8vw, 120px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+  }
+  .t-h1 { font-size: clamp(40px, 5vw, 72px); line-height: 1.02; letter-spacing: -0.03em; font-weight: 500; }
+  .t-h2 { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -0.025em; font-weight: 500; }
+  .t-h3 { font-size: clamp(24px, 2.2vw, 32px); line-height: 1.15; letter-spacing: -0.02em; font-weight: 500; }
+  .t-h4 { font-size: 20px; line-height: 1.3; letter-spacing: -0.01em; font-weight: 600; }
+  .t-body-lg { font-size: 20px; line-height: 1.5; color: var(--ink-700); }
+  .t-body    { font-size: 16px; line-height: 1.55; color: var(--ink-700); }
+  .t-small   { font-size: 14px; line-height: 1.5; color: var(--ink-500); }
+  .t-micro   { font-size: 11px; line-height: 1.4; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--ink-500); }
+
+  .em { font-family: var(--font-sans); font-style: italic; font-weight: 500; letter-spacing: -0.015em; }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+  .section { padding: 120px 0; position: relative; }
+  .section--dark { background: var(--ink-950); color: #fff; }
+  .section--dark .t-body, .section--dark .t-body-lg { color: rgba(255,255,255,.72); }
+  .section--dark .t-small, .section--dark .t-micro { color: rgba(255,255,255,.55); }
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 64px; border-bottom: 1px solid var(--line); padding-bottom: 32px; }
+  .section--dark .section-head { border-color: rgba(255,255,255,.12); }
+  .section-head__title { max-width: 640px; }
+  .section-head__meta { text-align: right; }
+
+  .kicker { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .kicker::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  .grid { display: grid; gap: 24px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 860px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .section { padding: 80px 0; }
+    .section-head { flex-direction: column; align-items: flex-start; }
+    .section-head__meta { text-align: left; }
+  }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    background: rgba(251,250,247,.72);
+    border-bottom: 1px solid rgba(16,16,18,.06);
+  }
+  .nav__inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; max-width: 1400px; margin: 0 auto; }
+  .nav__logo { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; font-size: 20px; }
+  .nav__logo img { height: 32px; }
+  .nav__links { display: flex; gap: 32px; }
+  .nav__links a { font-size: 14px; color: var(--ink-700); transition: color .2s; }
+  .nav__links a:hover { color: var(--fg); }
+  .nav__actions { display: flex; gap: 12px; align-items: center; }
+  @media (max-width: 720px) { .nav__links { display: none; } }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    position: relative;
+    padding: 120px 0 80px;
+    overflow: hidden;
+  }
+  .hero__grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(16,16,18,.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(16,16,18,.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    pointer-events: none;
+  }
+  .hero__bell {
+    position: absolute;
+    right: -120px; top: 60px;
+    width: 720px; opacity: .85;
+    pointer-events: none;
+    animation: bellDrift 14s ease-in-out infinite alternate;
+  }
+  @keyframes bellDrift {
+    0%   { transform: translateY(0) rotate(-1deg); }
+    100% { transform: translateY(-20px) rotate(1deg); }
+  }
+  .hero__inner { position: relative; max-width: 900px; }
+  .hero__eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 14px; border-radius: var(--r-pill);
+    background: var(--white); border: 1px solid var(--line);
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
+    color: var(--ink-600);
+    box-shadow: var(--shadow-sm);
+  }
+  .hero__eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(255,90,31,.15); }
+  .hero__title { margin: 24px 0 24px; }
+  .hero__sub { font-size: 20px; color: var(--ink-700); max-width: 620px; line-height: 1.5; }
+  .hero__ctas { display: flex; gap: 12px; margin-top: 40px; align-items: center; }
+
+  /* ============================================================
+     FLOW BUTTON — Kain0127 (21st.dev) pattern
+     ---
+     A dark pill. On hover:
+       • label slides right to make room
+       • trailing arrow icon flies out to the right (exits)
+       • a new arrow slides IN from the left (enters)
+       • background fills with accent color from left-to-right
+       • text colour crossfades to the dark ink so it reads on accent
+     Motion uses a snappy cubic-bezier for that "flow" feel.
+     ============================================================ */
+  .flow-btn {
+    --flow-bg: var(--ink-950);
+    --flow-fg: #ffffff;
+    --flow-accent: var(--orange-500);
+    --flow-accent-fg: #ffffff;
+    --flow-ease: cubic-bezier(0.76, 0, 0.24, 1);
+    --flow-dur: 0.55s;
+
+    position: relative;
+    display: inline-flex; align-items: center;
+    gap: 10px;
+    padding: 14px 22px 14px 26px;
+    background: var(--flow-bg);
+    color: var(--flow-fg);
+    border-radius: var(--r-pill);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    isolation: isolate;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: color var(--flow-dur) var(--flow-ease);
+    will-change: color;
+  }
+
+  /* The sweeping fill */
+  .flow-btn::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 100%;
+    background: var(--flow-accent);
+    transform: translateX(-101%);
+    transition: transform var(--flow-dur) var(--flow-ease);
+    z-index: -1;
+    border-radius: inherit;
+  }
+  .flow-btn:hover::before,
+  .flow-btn:focus-visible::before {
+    transform: translateX(0);
+  }
+  .flow-btn:hover,
+  .flow-btn:focus-visible {
+    color: var(--flow-accent-fg);
+    outline: none;
+  }
+
+  /* Label — slides slightly right on hover */
+  .flow-btn__label {
+    position: relative;
+    display: inline-block;
+    transition: transform var(--flow-dur) var(--flow-ease);
+  }
+  .flow-btn:hover .flow-btn__label,
+  .flow-btn:focus-visible .flow-btn__label {
+    transform: translateX(2px);
+  }
+
+  /* Arrow slot holds two stacked icons that swap */
+  .flow-btn__icon {
+    position: relative;
+    display: inline-grid;
+    width: 18px; height: 18px;
+    overflow: hidden;
+    place-items: center;
+  }
+  .flow-btn__icon svg {
+    grid-area: 1 / 1;
+    width: 18px; height: 18px;
+    transition: transform var(--flow-dur) var(--flow-ease), opacity var(--flow-dur) var(--flow-ease);
+  }
+  /* First arrow: visible, flies out to the right on hover */
+  .flow-btn__icon svg.flow-btn__arrow-out {
+    transform: translateX(0);
+  }
+  .flow-btn:hover .flow-btn__arrow-out,
+  .flow-btn:focus-visible .flow-btn__arrow-out {
+    transform: translateX(28px);
+    opacity: 0;
+  }
+  /* Second arrow: starts offscreen left, flies in on hover */
+  .flow-btn__icon svg.flow-btn__arrow-in {
+    transform: translateX(-28px);
+    opacity: 0;
+  }
+  .flow-btn:hover .flow-btn__arrow-in,
+  .flow-btn:focus-visible .flow-btn__arrow-in {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .flow-btn:active { transform: translateY(1px); }
+
+  /* Light variant — inverted for dark backgrounds */
+  .flow-btn--light {
+    --flow-bg: #ffffff;
+    --flow-fg: var(--ink-950);
+    --flow-accent: var(--orange-500);
+    --flow-accent-fg: #ffffff;
+    border-color: var(--ink-200);
+  }
+
+  /* Accent variant — accent base, dark ink on hover fill */
+  .flow-btn--accent {
+    --flow-bg: var(--orange-500);
+    --flow-fg: #ffffff;
+    --flow-accent: var(--ink-950);
+    --flow-accent-fg: #ffffff;
+  }
+
+  /* Outline variant */
+  .flow-btn--outline {
+    --flow-bg: transparent;
+    --flow-fg: var(--ink-950);
+    --flow-accent: var(--ink-950);
+    --flow-accent-fg: #ffffff;
+    border-color: var(--ink-950);
+  }
+
+  /* Secondary (non-flow) button — neutral companion */
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px;
+    border-radius: var(--r-pill);
+    border: 1px solid var(--ink-200);
+    color: var(--ink-800);
+    background: #fff;
+    font-size: 15px; font-weight: 500;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: var(--ink-400); background: var(--ink-50); }
+
+  /* ============================================================
+     HIGHLIGHTER — precise hand-drawn stroke (MagicUI-style)
+     Thin underline that hugs the text; marker variant sits behind.
+     ============================================================ */
+  .hl {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    padding: 0 1px;
+  }
+  .hl__svg {
+    position: absolute;
+    left: 0; right: 0;
+    top: auto;
+    bottom: -0.18em;
+    width: 100%;
+    height: 0.35em;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .hl__path {
+    fill: none;
+    stroke: var(--orange-500);
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  .hl.is-on .hl__path {
+    animation: hlDraw 1s cubic-bezier(.65,.05,.36,1) forwards;
+  }
+  @keyframes hlDraw { to { stroke-dashoffset: 0; } }
+
+  /* Marker / highlighter-behind-text variant — thick, translucent, sits under the baseline */
+  .hl--marker .hl__svg {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-45%);
+    height: 0.85em;
+    z-index: -1;
+  }
+  .hl--marker .hl__path {
+    stroke-width: 22;
+    stroke: var(--sky-200);
+    opacity: .85;
+  }
+  .hl--marker.hl--orange .hl__path { stroke: var(--orange-200); }
+  .hl--marker.hl--yellow .hl__path { stroke: #FFE066; }
+  .hl--marker.hl--mint   .hl__path { stroke: var(--mint-200); }
+
+  /* Underline variants — thin, sharp, matches text width */
+  .hl--orange .hl__path  { stroke: var(--orange-500); }
+  .hl--violet .hl__path  { stroke: var(--violet-500); stroke-width: 3; }
+  .hl--sky .hl__path     { stroke: var(--sky-500); stroke-width: 3; }
+
+  /* Circle — loops around text */
+  .hl--circle .hl__svg {
+    top: -12%; left: -8px; right: -8px;
+    bottom: auto;
+    width: calc(100% + 16px);
+    height: 130%;
+  }
+  .hl--circle .hl__path {
+    stroke-width: 2.5;
+    stroke: var(--orange-500);
+  }
+
+  /* ============================================================
+     CARDS
+     ============================================================ */
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 28px;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--ink-200); }
+
+  .card--dark { background: var(--ink-900); border-color: rgba(255,255,255,.08); color: #fff; }
+  .card--dark:hover { border-color: rgba(255,90,31,.35); }
+
+  /* ============================================================
+     STAT TILES
+     ============================================================ */
+  .stat {
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: #fff;
+    transition: border-color .3s, transform .3s;
+  }
+  .stat:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .stat__num { font-family: var(--font-sans); font-style: italic; font-weight: 500; font-size: 72px; line-height: 1; color: var(--ink-950); letter-spacing: -0.03em; }
+  .stat__plus { color: var(--accent); }
+  .stat__lbl { margin-top: 8px; font-size: 14px; color: var(--ink-500); }
+  .stat__note { margin-top: 12px; font-size: 13px; color: var(--ink-700); }
+
+  /* ============================================================
+     TESTIMONIAL
+     ============================================================ */
+  .quote {
+    padding: 36px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    display: flex; flex-direction: column; gap: 24px;
+    position: relative;
+  }
+  .quote__mark {
+    font-family: var(--font-sans);
+    font-style: italic;
+    font-weight: 600;
+    font-size: 72px;
+    line-height: .6;
+    color: var(--accent);
+    position: absolute;
+    top: 24px; right: 28px;
+    opacity: .35;
+  }
+  .quote__text { font-size: 18px; line-height: 1.5; color: var(--ink-800); }
+  .quote__who { display: flex; gap: 12px; align-items: center; }
+  .quote__avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--ink-100); flex: 0 0 44px; overflow: hidden; display: grid; place-items: center; font-weight: 600; color: var(--ink-700); }
+  .quote__name { font-weight: 600; font-size: 15px; }
+  .quote__role { font-size: 13px; color: var(--ink-500); }
+
+  /* ============================================================
+     MARQUEE
+     ============================================================ */
+  .marquee {
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .marquee__track {
+    display: flex; gap: 64px;
+    width: max-content;
+    animation: marqueeRoll 32s linear infinite;
+  }
+  .marquee__item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 16px; color: rgba(255,255,255,.72);
+    letter-spacing: -0.01em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .marquee__item svg { opacity: .8; }
+  @keyframes marqueeRoll { to { transform: translateX(-50%); } }
+
+  /* ============================================================
+     FORM
+     ============================================================ */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label { font-size: 13px; font-weight: 500; color: var(--ink-700); }
+  .input, .select, .textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--ink-200);
+    border-radius: var(--r-md);
+    background: #fff;
+    color: var(--ink-900);
+    font: inherit;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .input:focus, .select:focus, .textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(255,90,31,.15);
+  }
+  .textarea { min-height: 100px; resize: vertical; }
+  .select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%235B5B63' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .hint { font-size: 12px; color: var(--ink-500); }
+
+  /* Chip / Badge */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: var(--r-pill);
+    background: var(--ink-100); color: var(--ink-800);
+    font-size: 12px; font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .chip--accent { background: var(--orange-50); color: var(--orange-700); border-color: var(--orange-100); }
+  .chip--dark { background: var(--ink-900); color: #fff; }
+
+  /* ============================================================
+     COLOR SWATCHES
+     ============================================================ */
+  .swatch { display: flex; flex-direction: column; gap: 8px; }
+  .swatch__chip { height: 96px; border-radius: var(--r-md); box-shadow: inset 0 0 0 1px rgba(0,0,0,.06); }
+  .swatch__meta { display: flex; justify-content: space-between; font-size: 12px; font-family: var(--font-mono); color: var(--ink-600); }
+  .swatch__name { font-weight: 500; color: var(--ink-800); font-family: var(--font-sans); font-size: 13px; }
+
+  .scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; border-radius: var(--r-md); overflow: hidden; }
+  .scale__step { height: 64px; position: relative; }
+  .scale__step span { position: absolute; bottom: 6px; left: 6px; font-size: 10px; font-family: var(--font-mono); opacity: .7; }
+  .scale__step--light span { color: var(--ink-900); }
+  .scale__step--dark span { color: #fff; }
+
+  /* ============================================================
+     SPEC ROW
+     ============================================================ */
+  .spec-row { display: grid; grid-template-columns: 180px 1fr auto; gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row__name { font-family: var(--font-mono); font-size: 13px; color: var(--ink-700); }
+  .spec-row__val  { font-family: var(--font-mono); font-size: 12px; color: var(--ink-500); }
+
+  /* ============================================================
+     SCROLL NARRATIVE (SigIQ style)
+     ============================================================ */
+  .story { background: var(--ink-950); color: #fff; position: relative; overflow: hidden; }
+  .story__scene {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 80px 0;
+    position: relative;
+  }
+  .story__scene-inner {
+    max-width: 780px;
+    text-align: center;
+    padding: 0 32px;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .9s ease, transform .9s ease;
+  }
+  .story__scene.in .story__scene-inner { opacity: 1; transform: translateY(0); }
+  .story__tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: var(--r-pill);
+    border: 1px solid rgba(255,255,255,.16);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 32px;
+    color: rgba(255,255,255,.7);
+  }
+  .story__h {
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 500;
+    color: #fff;
+  }
+  .story__h .em { color: var(--orange-300); font-style: italic; }
+  .story__body { margin-top: 24px; color: rgba(255,255,255,.72); font-size: 18px; line-height: 1.55; }
+
+  .story__scroll-hint {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+    display: flex; align-items: center; gap: 8px;
+    animation: hintBob 2.4s ease-in-out infinite;
+  }
+  @keyframes hintBob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,6px); } }
+
+  .story__bg-curve {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .15;
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .footer {
+    background: var(--ink-950);
+    color: rgba(255,255,255,.7);
+    padding: 96px 0 40px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; }
+  @media (max-width: 860px) { .footer__grid { grid-template-columns: 1fr 1fr; } }
+  .footer__brand { display: flex; flex-direction: column; gap: 16px; max-width: 320px; }
+  .footer__brand img { height: 40px; filter: brightness(0) invert(1); opacity: .95; align-self: flex-start; }
+  .footer h5 { font-size: 13px; color: #fff; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; font-weight: 600; }
+  .footer ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .footer a { font-size: 14px; color: rgba(255,255,255,.6); transition: color .2s; }
+  .footer a:hover { color: #fff; }
+  .footer__bottom {
+    margin-top: 80px; padding-top: 32px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; color: rgba(255,255,255,.4);
+  }
+
+  /* ============================================================
+     INTERACTIVE GRID PATTERN (MagicUI)
+     Used as subtle section backgrounds. Each cell lights up on hover.
+     ============================================================ */
+  .igrid {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 35%, transparent 85%);
+  }
+  .igrid svg { width: 100%; height: 100%; display: block; }
+  .igrid rect {
+    fill: transparent;
+    stroke: rgba(16,16,18,.06);
+    stroke-width: 1;
+    transition: fill 900ms ease-out;
+    cursor: default;
+  }
+  .igrid rect:hover {
+    fill: rgba(255, 90, 31, 0.08);
+    transition: fill 80ms ease-out;
+  }
+  .section--dark .igrid rect { stroke: rgba(255,255,255,.05); }
+  .section--dark .igrid rect:hover { fill: rgba(255, 162, 116, 0.10); }
+  /* Colorful tint variant — cells pick cycling accent colors */
+  .igrid--colorful rect:nth-child(7n+1):hover { fill: rgba(255, 90, 31, 0.10); }
+  .igrid--colorful rect:nth-child(7n+2):hover { fill: rgba(62, 134, 224, 0.10); }
+  .igrid--colorful rect:nth-child(7n+3):hover { fill: rgba(111, 91, 208, 0.10); }
+  .igrid--colorful rect:nth-child(7n+4):hover { fill: rgba(61, 160, 105, 0.10); }
+  .igrid--colorful rect:nth-child(7n+5):hover { fill: rgba(201, 85, 113, 0.10); }
+  .igrid--colorful rect:nth-child(7n+6):hover { fill: rgba(255, 162, 116, 0.12); }
+  .igrid--colorful rect:nth-child(7n+7):hover { fill: rgba(184, 216, 250, 0.18); }
+
+  /* Ensure section content sits above the grid */
+  .section .container, .hero .container { position: relative; z-index: 1; }
+
+  /* ============================================================
+     SOFT ACCENT TAGS — subtle secondary hues (no dominance)
+     ============================================================ */
+  .chip--sky    { background: var(--sky-50);    color: var(--sky-500);    border-color: var(--sky-200); }
+  .chip--violet { background: var(--violet-50); color: var(--violet-500); border-color: var(--violet-200); }
+  .chip--mint   { background: var(--mint-50);   color: var(--mint-500);   border-color: var(--mint-200); }
+  .chip--rose   { background: var(--rose-50);   color: var(--rose-500);   border-color: var(--rose-200); }
+
+  /* Subtle left border accents for variety in sectioned content */
+  .accent-tick { position: relative; padding-left: 14px; }
+  .accent-tick::before {
+    content: ""; position: absolute; left: 0; top: 4px; bottom: 4px; width: 3px; border-radius: 2px;
+    background: var(--orange-500);
+  }
+  .accent-tick--sky::before    { background: var(--sky-500); }
+  .accent-tick--violet::before { background: var(--violet-500); }
+  .accent-tick--mint::before   { background: var(--mint-500); }
+
+  /* ============================================================
+     LOGO MARK (decorative reveal)
+     ============================================================ */
+  .logo-animate svg path { stroke-dasharray: 800; stroke-dashoffset: 800; animation: bellStroke 2.4s cubic-bezier(.65,.05,.36,1) forwards; }
+  .logo-animate svg path:nth-child(2) { animation-delay: .15s; }
+  .logo-animate svg path:nth-child(3) { animation-delay: .3s; }
+  @keyframes bellStroke { to { stroke-dashoffset: 0; } }
+
+  /* ============================================================
+     SCROLL REVEAL
+     ============================================================ */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-stagger > * { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+  .reveal-stagger.in > *:nth-child(1) { transition-delay: 0ms; }
+  .reveal-stagger.in > *:nth-child(2) { transition-delay: 80ms; }
+  .reveal-stagger.in > *:nth-child(3) { transition-delay: 160ms; }
+  .reveal-stagger.in > *:nth-child(4) { transition-delay: 240ms; }
+  .reveal-stagger.in > *:nth-child(5) { transition-delay: 320ms; }
+  .reveal-stagger.in > *:nth-child(6) { transition-delay: 400ms; }
+
+  /* ============================================================
+     UTIL
+     ============================================================ */
+  .divider { height: 1px; background: var(--line); margin: 0; border: 0; }
+  .section--dark .divider { background: rgba(255,255,255,.08); }
+  .u-mono { font-family: var(--font-mono); font-size: 12px; color: var(--ink-500); }
+  .tok-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--line); font-family: var(--font-mono); font-size: 13px; }
+  .tok-row:last-child { border-bottom: 0; }
+  .tok-row span:last-child { color: var(--ink-500); }
+
+  /* Subtle grain overlay for dark sections */
+  .section--dark::before, .story::before, .footer::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: .04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  }
+  .section--dark, .story, .footer { position: relative; }
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+     NAV
+     ========================================================== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="#">
+      <img src="assets/nirmaan-mark.png" alt="" />
+      <span>Nirmaan</span>
+    </a>
+    <div class="nav__links">
+      <a href="#tokens">Tokens</a>
+      <a href="#type">Type</a>
+      <a href="#color">Color</a>
+      <a href="#buttons">Buttons</a>
+      <a href="#components">Components</a>
+      <a href="#narrative">Narrative</a>
+    </div>
+    <div class="nav__actions">
+      <a href="#" class="btn-ghost" style="padding:10px 16px; font-size:14px;">Sign in</a>
+      <a href="#" class="flow-btn" style="padding:10px 18px; font-size:14px;">
+        <span class="flow-btn__label">Book a demo</span>
+        <span class="flow-btn__icon">
+          <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==========================================================
+     HERO
+     ========================================================== -->
+<section class="hero">
+  <!-- Interactive grid pattern background -->
+  <div class="igrid igrid--colorful" data-igrid data-cols="28" data-rows="14"></div>
+  <div class="hero__grid"></div>
+
+  <!-- decorative bell curve -->
+  <svg class="hero__bell logo-animate" viewBox="0 0 1000 700" fill="none" aria-hidden="true">
+    <path d="M50 620 C 280 620, 340 90, 550 90 C 720 90, 740 620, 950 620"
+          stroke="#FFC6A3" stroke-width="14" stroke-linecap="round"/>
+    <path d="M80 620 C 320 620, 420 160, 620 160 C 780 160, 790 620, 960 620"
+          stroke="#FF8448" stroke-width="14" stroke-linecap="round"/>
+    <path d="M120 620 C 360 620, 520 120, 720 120 C 860 120, 860 620, 970 620"
+          stroke="#FF5A1F" stroke-width="18" stroke-linecap="round"/>
+  </svg>
+
+  <div class="container">
+    <div class="hero__inner">
+      <div class="hero__eyebrow"><span class="dot"></span> Nirmaan · Design System v1.0</div>
+      <h1 class="hero__title t-display">
+        The visual language of a
+        <span class="em">superhuman</span>
+        <span class="hl hl--orange" data-hl><span>AI tutor</span>
+          <svg class="hl__svg" preserveAspectRatio="none" viewBox="0 0 300 12">
+            <path class="hl__path" d="M4 7 C 80 3, 200 10, 296 5"/>
+          </svg>
+        </span>
+        for every K‑12 classroom.
+      </h1>
+      <p class="hero__sub" style="margin-top: 32px;">
+        Tokens, typography, motion, and components. Built to ship a premium,
+        <span class="em" style="font-size:22px;">confident</span>, and unmistakably Nirmaan product.
+      </p>
+      <div class="hero__ctas">
+        <a href="#components" class="flow-btn">
+          <span class="flow-btn__label">Explore the system</span>
+          <span class="flow-btn__icon">
+            <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+        <a href="#narrative" class="btn-ghost">View narrative demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ==========================================================
+     TYPE
+     ========================================================== -->
+<section class="section" id="type">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">01 — Typography</div>
+        <h2 class="t-h1">Sans that thinks. <span class="em">Serif that feels.</span></h2>
+        <p class="t-body-lg" style="margin-top: 16px; max-width: 580px;">
+          Geist carries the interface. Instrument Serif's italic provides the emotional beat —
+          used sparingly to <span class="em">emphasize</span> what matters.
+        </p>
+      </div>
+      <div class="section-head__meta">
+        <div class="t-micro">Font stack</div>
+        <div class="u-mono" style="margin-top:8px;">Inter · 300–800 · italic for emphasis</div>
+      </div>
+    </div>
+
+    <!-- Type specimens -->
+    <div class="grid grid-2" style="gap:48px;">
+      <div>
+        <div class="t-micro" style="margin-bottom:12px;">Display · 120 / 0.95</div>
+        <div class="t-display">Nirmaan <span class="em">learns</span> every student.</div>
+      </div>
+      <div>
+        <div class="t-micro" style="margin-bottom:12px;">H1 · 72 / 1.02</div>
+        <div class="t-h1">A <span class="em">personal</span> 1:1 tutor, at the cost of computation.</div>
+
+        <div class="t-micro" style="margin-top:40px; margin-bottom:12px;">H2 · 52 / 1.05</div>
+        <div class="t-h2">Diagnose. Explain. <span class="em">Remember.</span></div>
+
+        <div class="t-micro" style="margin-top:40px; margin-bottom:12px;">H3 · 32 / 1.15</div>
+        <div class="t-h3">Every classroom, <span class="em">every pace.</span></div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin: 64px 0;"></div>
+
+    <div class="grid grid-3">
+      <div>
+        <div class="t-micro" style="margin-bottom:12px;">Body Lg · 20 / 1.5</div>
+        <p class="t-body-lg">Most students fail to achieve their best possible outcomes in group learning. The one‑size‑fits‑all approach teaches to the middle.</p>
+      </div>
+      <div>
+        <div class="t-micro" style="margin-bottom:12px;">Body · 16 / 1.55</div>
+        <p class="t-body">Nirmaan's multimodal tutor converses, illustrates, and thinks alongside each student — measuring gaps, not grades.</p>
+      </div>
+      <div>
+        <div class="t-micro" style="margin-bottom:12px;">Small · 14 / 1.5</div>
+        <p class="t-small">Deployed across 1,200+ Indian K‑12 schools. SOC‑2 Type II. COPPA compliant. Available in 11 languages.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     COLOR
+     ========================================================== -->
+<section class="section section--dark" id="color">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">02 — Color</div>
+        <h2 class="t-h1" style="color:#fff;">One accent. <span class="em" style="color:var(--orange-300);">Earned everywhere.</span></h2>
+        <p class="t-body-lg" style="margin-top: 16px; max-width: 580px;">
+          Warm paper and deep ink do the heavy lifting. Nirmaan orange — pulled straight from the logo —
+          only appears where it carries weight.
+        </p>
+      </div>
+      <div class="section-head__meta">
+        <div class="t-micro">Primary</div>
+        <div class="u-mono" style="margin-top:8px; color: var(--orange-300);">#FF5A1F · oklch(.69 .21 41)</div>
+      </div>
+    </div>
+
+    <!-- Orange scale -->
+    <div style="margin-bottom:48px;">
+      <div class="t-micro" style="margin-bottom:12px;">Orange — Primary Scale</div>
+      <div class="scale">
+        <div class="scale__step scale__step--light" style="background:#FFF4EE"><span>50</span></div>
+        <div class="scale__step scale__step--light" style="background:#FFE3D1"><span>100</span></div>
+        <div class="scale__step scale__step--light" style="background:#FFC6A3"><span>200</span></div>
+        <div class="scale__step scale__step--light" style="background:#FFA274"><span>300</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#FF8448"><span>400</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#FF5A1F"><span>500</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#EA4A0E"><span>600</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#C23A05"><span>700</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#8F2C06"><span>800</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#5F1D04"><span>900</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#2E0E02"><span>950</span></div>
+      </div>
+    </div>
+
+    <!-- Ink scale -->
+    <div style="margin-bottom:48px;">
+      <div class="t-micro" style="margin-bottom:12px;">Ink — Neutral Scale</div>
+      <div class="scale">
+        <div class="scale__step scale__step--light" style="background:#F6F6F7"><span>50</span></div>
+        <div class="scale__step scale__step--light" style="background:#EDEDF0"><span>100</span></div>
+        <div class="scale__step scale__step--light" style="background:#DADADE"><span>200</span></div>
+        <div class="scale__step scale__step--light" style="background:#B5B5BB"><span>300</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#8A8A92"><span>400</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#5B5B63"><span>500</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#3C3C42"><span>600</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#2A2A2F"><span>700</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#1C1C20"><span>800</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#121214"><span>900</span></div>
+        <div class="scale__step scale__step--dark"  style="background:#0A0A0B"><span>950</span></div>
+      </div>
+    </div>
+
+    <!-- Semantic swatches -->
+    <div class="grid grid-4">
+      <div class="swatch">
+        <div class="swatch__chip" style="background:#FF5A1F"></div>
+        <div class="swatch__name">Accent / Primary</div>
+        <div class="swatch__meta"><span>--accent</span><span>#FF5A1F</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__chip" style="background:#FBFAF7"></div>
+        <div class="swatch__name">Paper / Background</div>
+        <div class="swatch__meta"><span>--paper</span><span>#FBFAF7</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__chip" style="background:#0A0A0B"></div>
+        <div class="swatch__name">Ink 950 / Canvas dark</div>
+        <div class="swatch__meta"><span>--ink-950</span><span>#0A0A0B</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__chip" style="background:#FFE3D1"></div>
+        <div class="swatch__name">Accent Soft / Highlights</div>
+        <div class="swatch__meta"><span>--accent-soft</span><span>#FFE3D1</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     BUTTONS
+     ========================================================== -->
+<section class="section" id="buttons" style="overflow:hidden;">
+  <div class="igrid" data-igrid data-cols="32" data-rows="12" style="opacity:.7"></div>
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+          <div class="kicker t-micro">03 — Buttons · Flow</div>
+          <h2 class="t-h1">Buttons that <span class="em">breathe.</span></h2>
+          <p class="t-body-lg" style="margin-top: 16px; max-width: 580px;">
+            The Flow button — a 21st.dev pattern by Kain0127. A dark pill whose label, arrow icon,
+            and background all choreograph together on hover: an accent fill sweeps left-to-right
+            while the arrow flies off and is replaced by a fresh one gliding in.
+          </p>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="align-items:start;">
+      <div class="card">
+        <div class="t-micro" style="margin-bottom:16px;">Primary · Flow</div>
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <a href="#" class="flow-btn">
+            <span class="flow-btn__label">Get started</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a href="#" class="flow-btn" style="padding:16px 26px; font-size:16px;">
+            <span class="flow-btn__label">Book a demo</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a href="#" class="flow-btn" style="padding:10px 16px; font-size:13px;">
+            <span class="flow-btn__label">Small CTA</span>
+            <span class="flow-btn__icon" style="width:14px;height:14px;">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+        <p class="t-small" style="margin-top:20px;">Hover: label nudges right, trailing arrow flies out, replacement slides in, accent sweep fills from left.</p>
+      </div>
+
+      <div class="card">
+        <div class="t-micro" style="margin-bottom:16px;">Variants</div>
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <a href="#" class="flow-btn flow-btn--accent">
+            <span class="flow-btn__label">Try Nirmaan</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a href="#" class="flow-btn flow-btn--outline">
+            <span class="flow-btn__label">See pricing</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+          <a href="#" class="flow-btn flow-btn--light">
+            <span class="flow-btn__label">Start free trial</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+        <p class="t-small" style="margin-top:20px;">Accent, Outline, and Light variants share the same hover choreography.</p>
+      </div>
+
+      <div class="card">
+        <div class="t-micro" style="margin-bottom:16px;">Secondary · Ghost</div>
+        <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start;">
+          <a href="#" class="btn-ghost">View pricing</a>
+          <a href="#" class="btn-ghost" style="padding:16px 26px; font-size:16px;">Watch 2‑min demo <span>▶</span></a>
+          <a href="#" class="btn-ghost" style="padding:10px 16px; font-size:13px;">Cancel</a>
+        </div>
+        <p class="t-small" style="margin-top:20px;">Neutral companion. Always pairs with exactly one Flow button.</p>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:64px 0;"></div>
+
+    <!-- Spec rows -->
+    <div>
+      <div class="t-micro" style="margin-bottom:16px;">Flow button — spec</div>
+      <div class="spec-row">
+        <div class="spec-row__name">::before</div>
+        <div>Accent fill sweep, translateX(-101%) → 0.</div>
+        <div class="spec-row__val">duration 0.55s · cubic-bezier(.76,0,.24,1)</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-row__name">.flow-btn__label</div>
+        <div>Nudges 2px right on hover — hints motion.</div>
+        <div class="spec-row__val">translateX(0 → 2px)</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-row__name">.flow-btn__arrow-out</div>
+        <div>First arrow; exits stage right, fades out.</div>
+        <div class="spec-row__val">translateX(0 → 28px), opacity 1 → 0</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-row__name">.flow-btn__arrow-in</div>
+        <div>Second arrow; enters from left to replace it.</div>
+        <div class="spec-row__val">translateX(-28px → 0), opacity 0 → 1</div>
+      </div>
+      <div class="spec-row">
+        <div class="spec-row__name">:active</div>
+        <div>1px translate for tactile click feedback.</div>
+        <div class="spec-row__val">translateY(1px)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     HIGHLIGHTER
+     ========================================================== -->
+<section class="section section--dark" id="highlighter">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">04 — Highlighter</div>
+        <h2 class="t-h1" style="color:#fff;">Hand-drawn <span class="em" style="color:var(--orange-300);">emphasis.</span></h2>
+        <p class="t-body-lg" style="margin-top: 16px; max-width: 580px;">
+          A Magic UI-inspired marker. SVG path with <span class="em" style="color:var(--orange-300);">stroke-dashoffset</span>
+          animation, fired when the element enters the viewport.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="gap:48px;">
+      <div class="card card--dark" style="padding:48px;">
+        <div class="t-micro" style="margin-bottom:20px; color:rgba(255,255,255,.55);">Underline — orange</div>
+        <p class="t-h3" style="color:#fff;">
+          Nirmaan diagnoses
+          <span class="hl hl--orange" data-hl><span>learning gaps</span>
+            <svg class="hl__svg" preserveAspectRatio="none" viewBox="0 0 300 12">
+              <path class="hl__path" d="M4 7 C 80 3, 200 10, 296 5"/>
+            </svg>
+          </span>
+          before they compound.
+        </p>
+      </div>
+      <div class="card card--dark" style="padding:48px;">
+        <div class="t-micro" style="margin-bottom:20px; color:rgba(255,255,255,.55);">Marker — sky (behind)</div>
+        <p class="t-h3" style="color:#fff;">
+          Real-time feedback on
+          <span class="hl hl--marker" data-hl><span>every problem</span>
+            <svg class="hl__svg" preserveAspectRatio="none" viewBox="0 0 300 40">
+              <path class="hl__path" d="M8 20 C 90 32, 200 10, 292 22"/>
+            </svg>
+          </span>
+          a student tries.
+        </p>
+      </div>
+      <div class="card card--dark" style="padding:48px;">
+        <div class="t-micro" style="margin-bottom:20px; color:rgba(255,255,255,.55);">Underline — violet</div>
+        <p class="t-h3" style="color:#fff;">
+          Built for
+          <span class="hl hl--violet" data-hl><span>Indian classrooms</span>
+            <svg class="hl__svg" preserveAspectRatio="none" viewBox="0 0 300 12">
+              <path class="hl__path" d="M4 7 C 80 3, 200 9, 296 5"/>
+            </svg>
+          </span>
+          — across 11 languages.
+        </p>
+      </div>
+      <div class="card card--dark" style="padding:48px;">
+        <div class="t-micro" style="margin-bottom:20px; color:rgba(255,255,255,.55);">Circle</div>
+        <p class="t-h3" style="color:#fff;">
+          The multimodal
+          <span class="hl hl--circle" data-hl><span>future of tutoring</span>
+            <svg class="hl__svg" preserveAspectRatio="none" viewBox="0 0 320 50">
+              <path class="hl__path" d="M12 40 C 40 6, 300 2, 308 26 C 312 48, 40 52, 10 36"/>
+            </svg>
+          </span>
+          is already here.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     STAT TILES
+     ========================================================== -->
+<section class="section" id="stats" style="overflow:hidden;">
+  <div class="igrid igrid--colorful" data-igrid data-cols="32" data-rows="10" style="opacity:.55"></div>
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">05 — Stat Tiles</div>
+        <h2 class="t-h1">Numbers that <span class="em">carry weight.</span></h2>
+      </div>
+    </div>
+
+    <div class="grid grid-4 reveal-stagger">
+      <div class="stat">
+        <div class="stat__num" data-count="1200"><span>0</span><span class="stat__plus">+</span></div>
+        <div class="stat__lbl">Schools onboarded</div>
+        <div class="stat__note">Across Tier 1 – Tier 3 India</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num" data-count="2.4"><span>0</span><span class="stat__lbl" style="display:inline; font-family:var(--font-serif); font-size:28px; color:var(--ink-900);">σ</span></div>
+        <div class="stat__lbl">Avg. score improvement</div>
+        <div class="stat__note">Bloom's two-sigma, closed</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num"><span>4.9</span><span class="stat__plus">★</span></div>
+        <div class="stat__lbl">Parent rating</div>
+        <div class="stat__note">3,400+ reviews</div>
+      </div>
+      <div class="stat">
+        <div class="stat__num" data-count="11"><span>0</span></div>
+        <div class="stat__lbl">Languages supported</div>
+        <div class="stat__note">Incl. Hindi, Tamil, Marathi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     PRESS MARQUEE
+     ========================================================== -->
+<section class="section section--dark" id="press" style="padding: 80px 0;">
+  <div class="container" style="margin-bottom: 40px;">
+    <div class="t-micro" style="color: rgba(255,255,255,.55); text-align:center;">As featured in</div>
+  </div>
+  <div class="marquee">
+    <div class="marquee__track">
+      <!-- Publications — set 1 -->
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-style:italic; font-size:26px;">The Economic Times</span></div>
+      <div class="marquee__item"><span style="font-weight:800; font-size:22px; letter-spacing:-0.03em;">YourStory</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-size:28px;">Mint</span></div>
+      <div class="marquee__item"><span style="font-weight:700; font-size:22px; letter-spacing:0.2em;">INC42</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-style:italic; font-size:24px;">Forbes India</span></div>
+      <div class="marquee__item"><span style="font-weight:800; font-size:22px;">TechCrunch</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-size:26px;">Business Standard</span></div>
+      <div class="marquee__item"><span style="font-weight:700; font-size:22px; letter-spacing:-0.02em;">Moneycontrol</span></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-style:italic; font-size:26px;">The Economic Times</span></div>
+      <div class="marquee__item"><span style="font-weight:800; font-size:22px; letter-spacing:-0.03em;">YourStory</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-size:28px;">Mint</span></div>
+      <div class="marquee__item"><span style="font-weight:700; font-size:22px; letter-spacing:0.2em;">INC42</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-style:italic; font-size:24px;">Forbes India</span></div>
+      <div class="marquee__item"><span style="font-weight:800; font-size:22px;">TechCrunch</span></div>
+      <div class="marquee__item"><span style="font-family:var(--font-serif); font-size:26px;">Business Standard</span></div>
+      <div class="marquee__item"><span style="font-weight:700; font-size:22px; letter-spacing:-0.02em;">Moneycontrol</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     TESTIMONIALS
+     ========================================================== -->
+<section class="section" id="testimonials">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">06 — Testimonials</div>
+        <h2 class="t-h1">The <span class="em">practitioners</span> agree.</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-3 reveal-stagger">
+      <div class="quote">
+        <div class="quote__mark">“</div>
+        <p class="quote__text">
+          For the first time, I can see exactly where each of my 42 students is stuck — before they tell me.
+          Nirmaan's dashboard is <span class="em">a different kind of honest.</span>
+        </p>
+        <div class="quote__who">
+          <div class="quote__avatar" style="background:#FFE3D1; color:#C23A05;">R</div>
+          <div>
+            <div class="quote__name">Rashmi Menon</div>
+            <div class="quote__role">Math Dept. Head · DPS Bangalore North</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quote">
+        <div class="quote__mark">“</div>
+        <p class="quote__text">
+          My daughter asks the tutor questions she'd never ask me.
+          That's the real unlock — <span class="em">permission to not know.</span>
+        </p>
+        <div class="quote__who">
+          <div class="quote__avatar" style="background:#EDEDF0;">A</div>
+          <div>
+            <div class="quote__name">Anand Krishnan</div>
+            <div class="quote__role">Parent · Class 7, Chennai</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quote">
+        <div class="quote__mark">“</div>
+        <p class="quote__text">
+          We replaced four tuition subscriptions with Nirmaan.
+          The kids prefer it, and our reports finally show progress — <span class="em">not just completion.</span>
+        </p>
+        <div class="quote__who">
+          <div class="quote__avatar" style="background:#FFE3D1; color:#C23A05;">P</div>
+          <div>
+            <div class="quote__name">Priya Shah</div>
+            <div class="quote__role">Principal · Podar International, Pune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FORMS
+     ========================================================== -->
+<section class="section" id="forms" style="background: var(--ink-50); padding: 100px 0;">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">07 — Forms</div>
+        <h2 class="t-h1">Inputs that <span class="em">listen.</span></h2>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="gap:48px;">
+      <div class="card">
+        <div class="t-micro" style="margin-bottom:24px;">Demo request form</div>
+        <form style="display:flex; flex-direction:column; gap:20px;">
+          <div class="field">
+            <label class="label">School name</label>
+            <input class="input" placeholder="e.g. DPS North Bangalore" />
+          </div>
+          <div class="grid grid-2" style="gap:16px;">
+            <div class="field">
+              <label class="label">Your name</label>
+              <input class="input" placeholder="Rashmi M." />
+            </div>
+            <div class="field">
+              <label class="label">Role</label>
+              <select class="select">
+                <option>Principal</option>
+                <option>Academic Head</option>
+                <option>Teacher</option>
+                <option>Parent</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Work email</label>
+            <input class="input" type="email" placeholder="rashmi@school.edu" />
+            <div class="hint">We'll never share this. SOC-2 Type II compliant.</div>
+          </div>
+          <div class="field">
+            <label class="label">Tell us about your classroom</label>
+            <textarea class="textarea" placeholder="Grade levels, class sizes, current tools..."></textarea>
+          </div>
+          <button type="button" class="flow-btn" style="align-self:flex-start; margin-top:8px;">
+            <span class="flow-btn__label">Request a demo</span>
+            <span class="flow-btn__icon">
+              <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:32px;">
+        <div class="card">
+          <div class="t-micro" style="margin-bottom:16px;">Chip / Badge</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="chip">Default</span>
+            <span class="chip chip--accent">New · v2.0</span>
+            <span class="chip chip--sky">Sky</span>
+            <span class="chip chip--violet">Violet</span>
+            <span class="chip chip--mint">Active</span>
+            <span class="chip chip--rose">Beta</span>
+            <span class="chip chip--dark">Premium</span>
+            <span class="chip">Hindi · हिंदी</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="t-micro" style="margin-bottom:16px;">Field states</div>
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <input class="input" placeholder="Default state" />
+            <input class="input" placeholder="Focused (click me)" autofocus />
+            <input class="input" value="Filled content" />
+            <input class="input" disabled value="Disabled" style="background: var(--ink-50); color: var(--ink-400);" />
+            <input class="input" value="Error — invalid email" style="border-color: #E35B3A; box-shadow: 0 0 0 4px rgba(227,91,58,.1);" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     SCROLL NARRATIVE DEMO (SigIQ style)
+     ========================================================== -->
+<section class="story" id="narrative">
+  <svg class="story__bg-curve" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 700 C 400 700, 500 200, 800 200 C 1100 200, 1200 700, 1600 700" stroke="#FF5A1F" stroke-width="2" fill="none"/>
+  </svg>
+
+  <div class="story__scene" id="scene-1">
+    <div class="story__scene-inner">
+      <div class="story__tag">Status Quo</div>
+      <h2 class="story__h">One-size-fits-few — the <span class="em">fatal flaw</span> of the traditional classroom.</h2>
+      <p class="story__body">In a group of 40, teaching to the middle leaves the bottom confused and the top bored. Standardized outcomes, standardized boredom.</p>
+    </div>
+    <div class="story__scroll-hint">Scroll to explore <span>↓</span></div>
+  </div>
+
+  <div class="story__scene" id="scene-2">
+    <div class="story__scene-inner">
+      <div class="story__tag">Utopia</div>
+      <h2 class="story__h">1:1 tutoring works. <span class="em">Affording it doesn't.</span></h2>
+      <p class="story__body">Bloom's two-sigma study proved it in 1984: private tutoring lifts students two standard deviations. Yet at ₹800/hour, it remains a luxury for the few.</p>
+    </div>
+  </div>
+
+  <div class="story__scene" id="scene-3">
+    <div class="story__scene-inner">
+      <div class="story__tag">Practical Utopia</div>
+      <h2 class="story__h">A <span class="em">superhuman</span> 1:1 AI tutor for every K-12 student.</h2>
+      <p class="story__body">Nirmaan collapses the cost of personalized learning down to the cost of computation — democratizing what used to be a luxury of the top 1%.</p>
+      <div style="margin-top:40px; display:flex; gap:12px; justify-content:center;">
+        <a href="#" class="flow-btn">
+          <span class="flow-btn__label">See it in action</span>
+          <span class="flow-btn__icon">
+            <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+        <a href="#" class="flow-btn flow-btn--light">
+          <span class="flow-btn__label">Partner with us</span>
+          <span class="flow-btn__icon">
+            <svg class="flow-btn__arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <svg class="flow-btn__arrow-in"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     TOKENS REFERENCE
+     ========================================================== -->
+<section class="section" id="tokens" style="background:#fff;">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-head__title">
+        <div class="kicker t-micro">08 — Tokens</div>
+        <h2 class="t-h1">The <span class="em">source of truth.</span></h2>
+      </div>
+    </div>
+    <div class="grid grid-2" style="gap:48px;">
+      <div>
+        <div class="t-h4" style="margin-bottom:20px;">Radii</div>
+        <div class="tok-row"><span>--r-sm</span><span>6px</span></div>
+        <div class="tok-row"><span>--r-md</span><span>10px</span></div>
+        <div class="tok-row"><span>--r-lg</span><span>16px</span></div>
+        <div class="tok-row"><span>--r-xl</span><span>24px</span></div>
+        <div class="tok-row"><span>--r-pill</span><span>999px</span></div>
+
+        <div class="t-h4" style="margin:40px 0 20px;">Shadow</div>
+        <div class="tok-row"><span>--shadow-sm</span><span>0 1px 2px, 0 0 0 1px</span></div>
+        <div class="tok-row"><span>--shadow-md</span><span>0 8px 24px -8px</span></div>
+        <div class="tok-row"><span>--shadow-lg</span><span>0 24px 60px -16px</span></div>
+        <div class="tok-row"><span>--shadow-glow</span><span>0 10px 40px rgba(255,90,31,.35)</span></div>
+      </div>
+      <div>
+        <div class="t-h4" style="margin-bottom:20px;">Type</div>
+        <div class="tok-row"><span>--font-sans</span><span>Inter</span></div>
+        <div class="tok-row"><span>--font-italic</span><span>Inter · italic (emphasis)</span></div>
+        <div class="tok-row"><span>--font-mono</span><span>Inter · feature‑rich</span></div>
+
+        <div class="t-h4" style="margin:40px 0 20px;">Motion</div>
+        <div class="tok-row"><span>ease-standard</span><span>cubic-bezier(.2,.8,.2,1)</span></div>
+        <div class="tok-row"><span>ease-story</span><span>cubic-bezier(.65,.05,.36,1)</span></div>
+        <div class="tok-row"><span>dur-fast</span><span>200ms</span></div>
+        <div class="tok-row"><span>dur-base</span><span>400ms</span></div>
+        <div class="tok-row"><span>dur-slow</span><span>900ms</span></div>
+        <div class="tok-row"><span>flow-spin</span><span>4s linear infinite</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     FOOTER
+     ========================================================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="assets/nirmaan-logo-full.png" alt="Nirmaan" />
+        <p style="font-size:14px; line-height:1.55;">An AI-native learning stack for K-12 schools. Diagnosing gaps, teaching through conversation, illustration, and thought — at the cost of computation.</p>
+        <div style="display:flex; gap:12px; margin-top:8px;">
+          <span class="chip chip--dark" style="background:rgba(255,255,255,.08); color:#fff;">SOC-2</span>
+          <span class="chip chip--dark" style="background:rgba(255,255,255,.08); color:#fff;">COPPA</span>
+          <span class="chip chip--dark" style="background:rgba(255,255,255,.08); color:#fff;">ISO 27001</span>
+        </div>
+      </div>
+      <div>
+        <h5>Product</h5>
+        <ul>
+          <li><a href="#">For Schools</a></li>
+          <li><a href="#">For Teachers</a></li>
+          <li><a href="#">For Parents</a></li>
+          <li><a href="#">Nirmaan Labs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Research</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="#">hello@nirmaan.ai</a></li>
+          <li><a href="#">+91 80 4567 8900</a></li>
+          <li><a href="#">Bengaluru · Delhi</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div>© 2026 Nirmaan AI Systems Pvt. Ltd. Built with intent.</div>
+      <div style="display:flex; gap:24px;">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // SCROLL REVEAL
+  // ============================================================
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('in');
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-stagger, .story__scene, [data-hl]').forEach(el => io.observe(el));
+
+  // Highlighters fire on intersection
+  const hlIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('is-on');
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-hl]').forEach(el => hlIO.observe(el));
+
+  // ============================================================
+  // COUNT-UP STATS
+  // ============================================================
+  const countIO = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const numEl = el.querySelector('.stat__num span:first-child');
+      const target = parseFloat(el.dataset.count);
+      if (!numEl || isNaN(target)) { countIO.unobserve(el); return; }
+      const isFloat = target % 1 !== 0;
+      const duration = 1400;
+      const start = performance.now();
+      const fmt = (v) => {
+        if (isFloat) return v.toFixed(1);
+        if (target >= 1000) return Math.round(v).toLocaleString();
+        return Math.round(v).toString();
+      };
+      function tick(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        numEl.textContent = fmt(eased * target);
+        if (t < 1) requestAnimationFrame(tick);
+        else numEl.textContent = fmt(target);
+      }
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat[data-count], .stat .stat__num[data-count]').forEach(el => {
+    // Handle stats that have data-count on the stat itself or on stat__num
+    const root = el.classList.contains('stat') ? el : el.closest('.stat');
+    if (root && root.dataset.count === undefined && el.dataset.count) root.dataset.count = el.dataset.count;
+  });
+  document.querySelectorAll('.stat').forEach(el => {
+    const numEl = el.querySelector('.stat__num');
+    const attr = el.dataset.count || (numEl && numEl.dataset.count);
+    if (attr) {
+      el.dataset.count = attr;
+      countIO.observe(el);
+    }
+  });
+
+  // ============================================================
+  // SMOOTH SCROLL
+  // ============================================================
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        const y = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
