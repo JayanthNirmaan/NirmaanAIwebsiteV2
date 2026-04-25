@@ -1,27 +1,27 @@
-# Serve the Next.js static export from /out as the site root.
-# Hostinger deploys the full repo into public_html; this rewrites
-# all requests so visitors see the built site, not the source code.
+# Serve the Next.js static export from /out as if it were the site root.
+# Hostinger deploys the full repo into public_html; this rewrites every
+# request so visitors see the built site, not the source code.
 
 RewriteEngine On
+RewriteBase /
 
-# If the request already starts with /out/, leave it alone.
-RewriteCond %{REQUEST_URI} ^/out/ [OR]
-# Don't rewrite the .htaccess itself.
-RewriteCond %{REQUEST_URI} ^/\.htaccess$
-RewriteRule ^ - [L]
+# Don't rewrite requests that already target /out/
+RewriteRule ^out/ - [L]
 
-# Map the bare root "/" to /out/index.html
+# Bare root -> /out/index.html
 RewriteRule ^$ out/index.html [L]
 
-# For any other request, prepend /out/ and serve from there.
-RewriteCond %{DOCUMENT_ROOT}/out%{REQUEST_URI} -f [OR]
-RewriteCond %{DOCUMENT_ROOT}/out%{REQUEST_URI} -d
-RewriteRule ^(.*)$ out/$1 [L]
+# If a matching file exists under /out/, serve it from there.
+RewriteCond %{DOCUMENT_ROOT}/out/$1 -f
+RewriteRule ^(.+)$ out/$1 [L]
 
-# If the file/dir doesn't exist under /out either, try Next.js-style
-# clean URLs by appending .html (e.g. /about -> /out/about.html)
+# If a matching directory exists under /out/, serve its index.html.
+RewriteCond %{DOCUMENT_ROOT}/out/$1 -d
+RewriteRule ^(.+?)/?$ out/$1/index.html [L]
+
+# Clean URLs: /about -> /out/about.html
 RewriteCond %{DOCUMENT_ROOT}/out/$1.html -f
-RewriteRule ^(.*)$ out/$1.html [L]
+RewriteRule ^(.+)$ out/$1.html [L]
 
-# Fallback: serve the 404 page from the export.
+# Fallback 404
 ErrorDocument 404 /out/404.html
