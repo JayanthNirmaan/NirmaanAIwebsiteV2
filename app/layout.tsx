@@ -41,7 +41,6 @@ export const metadata: Metadata = {
       "Personalized learning used to be a luxury of the top 1%. Nirmaan collapses it to the cost of computation.",
     images: ["/og-image.png"],
   },
-  icons: { icon: "/brand/nirmaan-mark.png" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
