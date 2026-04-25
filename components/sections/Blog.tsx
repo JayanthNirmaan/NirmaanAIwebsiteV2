@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { ArrowRight, BookOpen, Lightbulb, School } from "lucide-react";
+import { ArrowUpRight, BellIcon, BookOpen, Brain, Share2, Lightbulb } from "lucide-react";
 import { Chip } from "@/components/ui/Chip";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { BlogArt } from "@/components/illustrations/BlogArt";
 import { AnimatedList, AnimatedListItem } from "@/components/ui/AnimatedList";
 import { Marquee } from "@/components/ui/Marquee";
 import { blog } from "@/content/home";
-import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { registerGSAP, gsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 // ─── Bento primitives ─────────────────────────────────────────────────────────
@@ -42,21 +42,18 @@ function BentoCard({
   Icon?: React.ElementType;
 }) {
   return (
-    <div className={cn("bento-card blog-card", className)}>
-      {/* Animated background layer */}
+    <div className={cn("bento-card blog-card group", className)}>
       <div className="bento-card__bg" aria-hidden>
         {background}
       </div>
-
-      {/* Content pinned to bottom */}
       <div className="bento-card__body">
         {chip && <Chip variant="default" className="bento-card__chip">{chip}</Chip>}
         {Icon && <Icon size={18} className="bento-card__icon" aria-hidden />}
         <h3 className="t-h3 bento-card__title">{name}</h3>
         <p className="t-small bento-card__desc">{description}</p>
         {cta && href && (
-          <a href={href} className="blog-more bento-card__cta">
-            {cta} <ArrowRight size={16} />
+          <a href={href} className="bento-card__cta">
+            {cta} <ArrowUpRight size={16} />
           </a>
         )}
       </div>
@@ -64,7 +61,7 @@ function BentoCard({
   );
 }
 
-// ─── Marquee background for card 1 ────────────────────────────────────────────
+// ─── Backgrounds ──────────────────────────────────────────────────────────────
 
 const marqueeItems = [
   { label: "Personalized learning", sub: "Adaptive AI tutoring for every student" },
@@ -89,8 +86,6 @@ function MarqueeBg() {
     </div>
   );
 }
-
-// ─── AnimatedList background for card 2 ───────────────────────────────────────
 
 const listItems = [
   { icon: "🧠", text: "Gap detected: Quadratic equations" },
@@ -130,7 +125,68 @@ function em(html: string) {
   });
 }
 
-const ICONS = [Lightbulb, BookOpen, School];
+const features = (posts: typeof blog.posts) => [
+  {
+    Icon: Lightbulb,
+    chip: posts[0].chip,
+    name: <>{posts[0].titlePre}<span className="em">{posts[0].titleEm}</span>{posts[0].titlePost}</>,
+    description: posts[0].desc,
+    href: "#",
+    cta: "Read more",
+    className: "bento-card--lg",   // col span 2, row 1
+    background: (
+      <>
+        <BlogArt variant={posts[0].art} />
+        <MarqueeBg />
+      </>
+    ),
+  },
+  {
+    Icon: BellIcon,
+    chip: posts[1].chip,
+    name: <>{posts[1].titlePre}<span className="em">{posts[1].titleEm}</span>{posts[1].titlePost}</>,
+    description: posts[1].desc,
+    href: "#",
+    cta: "Read more",
+    className: "bento-card--sm",   // col span 1, row 1
+    background: (
+      <>
+        <BlogArt variant={posts[1].art} />
+        <AnimatedListBg />
+      </>
+    ),
+  },
+  {
+    Icon: Share2,
+    chip: posts[2].chip,
+    name: <>{posts[2].titlePre}<span className="em">{posts[2].titleEm}</span>{posts[2].titlePost}</>,
+    description: posts[2].desc,
+    href: "#",
+    cta: "Read more",
+    className: "bento-card--tall", // col span 1, row span 2
+    background: <BlogArt variant={posts[2].art} />,
+  },
+  {
+    Icon: Brain,
+    chip: posts[3].chip,
+    name: <>{posts[3].titlePre}<span className="em">{posts[3].titleEm}</span>{posts[3].titlePost}</>,
+    description: posts[3].desc,
+    href: "#",
+    cta: "Read more",
+    className: "bento-card--sm",   // col span 1, row 2
+    background: <BlogArt variant={posts[3].art} />,
+  },
+  {
+    Icon: BookOpen,
+    chip: posts[4].chip,
+    name: <>{posts[4].titlePre}<span className="em">{posts[4].titleEm}</span>{posts[4].titlePost}</>,
+    description: posts[4].desc,
+    href: "#",
+    cta: "Read more",
+    className: "bento-card--lg",   // col span 2, row 2
+    background: <BlogArt variant={posts[4].art} />,
+  },
+];
 
 export function Blog() {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -166,13 +222,10 @@ export function Blog() {
       }
     }, rootRef);
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    return () => { ctx.revert(); };
   }, []);
 
-  const [p0, p1, p2] = blog.posts;
+  const cards = features(blog.posts);
 
   return (
     <section className="section" id="blog" ref={rootRef}>
@@ -181,56 +234,18 @@ export function Blog() {
           <SectionHead
             kicker={blog.kicker}
             title={em(blog.title)}
-            meta={<div className="u-mono">{blog.meta}</div>}
+            meta={
+              <a href="/blog" className="btn-ghost" style={{ color: "var(--orange-700)" }}>
+                View all Blogs <ArrowUpRight size={14} />
+              </a>
+            }
           />
         </div>
 
         <BentoGrid ref={gridRef}>
-          {/* Card 1 — large, 2-col, Marquee background */}
-          <BentoCard
-            className="bento-card--lg"
-            chip={p0.chip}
-            Icon={ICONS[0]}
-            name={<>{p0.titlePre}<span className="em">{p0.titleEm}</span>{p0.titlePost}</>}
-            description={p0.desc}
-            href="#"
-            cta="Read more"
-            background={
-              <>
-                <BlogArt variant={p0.art} />
-                <MarqueeBg />
-              </>
-            }
-          />
-
-          {/* Card 2 — 1-col, AnimatedList background */}
-          <BentoCard
-            className="bento-card--sm"
-            chip={p1.chip}
-            Icon={ICONS[1]}
-            name={<>{p1.titlePre}<span className="em">{p1.titleEm}</span>{p1.titlePost}</>}
-            description={p1.desc}
-            href="#"
-            cta="Read more"
-            background={
-              <>
-                <BlogArt variant={p1.art} />
-                <AnimatedListBg />
-              </>
-            }
-          />
-
-          {/* Card 3 — full-width horizontal, bell-curve art */}
-          <BentoCard
-            className="bento-card--wide"
-            chip={p2.chip}
-            Icon={ICONS[2]}
-            name={<>{p2.titlePre}<span className="em">{p2.titleEm}</span>{p2.titlePost}</>}
-            description={p2.desc}
-            href="#"
-            cta="Read more"
-            background={<BlogArt variant={p2.art} />}
-          />
+          {cards.map((card, idx) => (
+            <BentoCard key={idx} {...card} />
+          ))}
         </BentoGrid>
       </div>
     </section>

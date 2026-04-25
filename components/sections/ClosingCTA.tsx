@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { FlowButton } from "@/components/ui/FlowButton";
 import { StoryBgCurve } from "@/components/illustrations/StoryBgCurve";
+import { useWaitlist } from "@/components/ui/WaitlistContext";
 import { closingCTA } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -16,6 +17,7 @@ function em(html: string) {
 }
 
 export function ClosingCTA() {
+  const { open: openWaitlist } = useWaitlist();
   const rootRef = useRef<HTMLElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
 
@@ -71,38 +73,25 @@ export function ClosingCTA() {
   return (
     <section className="story" id="book" ref={rootRef}>
       <StoryBgCurve />
-      <div className="story__scene" style={{ minHeight: "100vh" }}>
+      <div className="story__scene" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div ref={innerRef} className="story__scene-inner in">
-          <div className="story__tag">{closingCTA.tag}</div>
+
           <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 48 }}>
             {closingCTA.manifesto.map((line, i) => (
               <p
                 key={i}
                 className="manifesto-line t-body-lg"
-                style={{ color: "rgba(255,255,255,0.85)", fontSize: 22 }}
+                style={{ color: "rgba(255,255,255,0.85)", fontSize: 18 }}
               >
                 {em(line)}
               </p>
             ))}
           </div>
-          <h2 className="t-display" style={{ color: "#fff" }}>{closingCTA.title}</h2>
+          <h2 className="t-display" style={{ color: "#fff", fontSize: "clamp(20px, 5vw, 60px)" }}>{closingCTA.title}</h2>
           <div style={{ marginTop: 48, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <FlowButton variant="accent" href="#contact">{closingCTA.ctaPrimary}</FlowButton>
+            <FlowButton variant="accent" onClick={openWaitlist}>{closingCTA.ctaPrimary}</FlowButton>
             <FlowButton variant="light" href="#contact">{closingCTA.ctaSecondary}</FlowButton>
           </div>
-          <button
-            onClick={scrollTop}
-            className="t-micro"
-            style={{
-              marginTop: 56,
-              background: "transparent",
-              color: "rgba(255,255,255,0.5)",
-              cursor: "pointer",
-              letterSpacing: "0.2em",
-            }}
-          >
-            {closingCTA.backToTop}
-          </button>
         </div>
       </div>
     </section>

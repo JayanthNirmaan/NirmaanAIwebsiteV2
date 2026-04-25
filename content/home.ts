@@ -30,9 +30,9 @@ export const hero = {
 
 export const problemScenes = [
   {
-    tag: "THE PROBLEM (PART 1)",
+    tag: "THE PROBLEM",
     title: "The teacher explains it once in class.",
-    body: "You didn't fully get it. But there's no time to stop — the chapter moved on.",
+    body: "You didn't fully get it. But there's no time to stop the chapter moved on.",
   },
   {
     tag: "Classroom",
@@ -42,12 +42,7 @@ export const problemScenes = [
   {
     tag: "At Home",
     title: "Later at home, you try to figure it out on your own.",
-    body: "The textbook explains it the same way — and it still doesn't make sense. YouTube has a hundred videos, but not the way you need.",
-  },
-  {
-    tag: "The Surrender",
-    title: "So the doubt stays.",
-    body: "And 'later' quietly turns into never. You had to move on.",
+    body: "The textbook explains it the same way and it still doesn't make sense. YouTube has a hundred videos, but not the way you need.",
   },
 ];
 
@@ -64,8 +59,8 @@ export const whatIf = {
   titlePost: " who understood exactly how you learn and was available anytime you needed?",
   bullets: [
     { text: "A tutor that knows where your gaps are.", variant: "orange" as const },
-    { text: "Teaches anytime you need, for as long as you need — until you truly understand.", variant: "sky" as const },
-    { text: "Explains through conversation, visuals, and drawings — tailored to how you understand best.", variant: "violet" as const },
+    { text: "Teaches anytime you need, for as long as you need until you truly understand.", variant: "sky" as const },
+    { text: "Explains through conversation, visuals, and drawings tailored to how you understand best.", variant: "violet" as const },
     { text: "And costs far less than a traditional tutor.", variant: "mint" as const },
   ],
 };
@@ -81,7 +76,7 @@ export const meetNirmaan = {
       body: "Two-way. It asks. It listens. It responds. Adapts in real time, like a tutor sitting next to you. Explains every concept on screen, clearly.",
       chips: ["Two-way", "Adapts", "Conversational"],
       points: [
-        "Two-way voice — it asks, listens, and responds in real time.",
+        "Two-way voice: it asks, listens, and responds in real time.",
         "Adapts like a tutor sitting next to you, not a scripted bot.",
         "Explains every concept clearly, right on your screen.",
       ],
@@ -101,17 +96,17 @@ export const meetNirmaan = {
       body: "No waiting. No fixed schedules. Learn whenever you're stuck. Re-explains concepts in different ways until it clicks. Checks if you've actually understood before moving on.",
       visual: "memory" as const,
       points: [
-        "No waiting, no fixed schedules — learn the moment you're stuck.",
+        "No waiting, no fixed schedules, learn the moment you're stuck.",
         "Re-explains in different ways until it actually clicks.",
         "Checks that you've understood before moving on.",
       ],
     },
     {
       heading: "Hyper-Personalized for You",
-      body: "Understands your gaps, pace, and level — and adapts every explanation to you. Learns how you think, what works, and what doesn't. Gets better at teaching you the more you use it.",
+      body: "Understands your gaps, pace, and level and adapts every explanation to you. Learns how you think, what works, and what doesn't. Gets better at teaching you the more you use it.",
       chip: "Personalized",
       points: [
-        "Understands your gaps, pace, and level — adapts every explanation.",
+        "Understands your gaps, pace, and level  adapts every explanation.",
         "Learns how you think, what works, and what doesn't.",
         "Gets better at teaching you the more you use it.",
       ],
@@ -121,9 +116,9 @@ export const meetNirmaan = {
 
 export const simPower = {
   kicker: "Powered by SIM",
-  title: ["Nirmaan doesn't just teach.", "It understands", "you first."] as const,
+  title: ["Nirmaan doesn't just teach.", "It understands you first."] as const,
   bullets: [
-    { text: "Builds a complete model of you — your strengths, your gaps, how you learn.", variant: "orange" as const },
+    { text: "Builds a complete model of you - your strengths, your gaps, how you learn.", variant: "orange" as const },
     { text: "Knows what you've mastered, what's shaky, and what's been missing for years.", variant: "orange" as const },
     { text: "Nirmaan doesn't just respond. It continuously learns how you think, where you struggle, and what works for you.", variant: "orange" as const },
   ],
@@ -193,17 +188,18 @@ export const testimonials = {
 export const trustLogos = {
   header: "Trusted by schools and learning partners",
   logos: [
-    "School 1",
-    "School 2",
-    "School 3",
-    "Partner 1",
-    "Partner 2",
+    { src: "/trust-logos/Logo-1.png", alt: "Partner 1" },
+    { src: "/trust-logos/Logo-2.png", alt: "Partner 2" },
+    { src: "/trust-logos/Logo-3.png", alt: "Partner 3" },
+    { src: "/trust-logos/Logo-4.png", alt: "Partner 4" },
+    { src: "/trust-logos/Logo-5.png", alt: "Partner 5" },
+    { src: "/trust-logos/Logo-6.png", alt: "Partner 6" },
   ],
 };
 
 export const blog = {
   kicker: "From the blog",
-  title: "Exploring how students think<br>learn and grow",
+  title: "Exploring how students think, learn and grow",
   meta: "Insights from our team",
   posts: [
     {
@@ -230,6 +226,22 @@ export const blog = {
       desc: "Micro-level diagnostics that change how teachers teach.",
       art: "bell" as const,
     },
+    {
+      chip: "Research",
+      titlePre: "The science of ",
+      titleEm: "spaced repetition",
+      titlePost: " and why most students never use it.",
+      desc: "How timing beats effort when it comes to long-term recall.",
+      art: "waves" as const,
+    },
+    {
+      chip: "Parents",
+      titlePre: "What your child's ",
+      titleEm: "homework struggle",
+      titlePost: " is really telling you.",
+      desc: "Reading the signals that often go unnoticed.",
+      art: "nodes" as const,
+    },
   ],
 };
 
@@ -241,7 +253,7 @@ export const closingCTA = {
     "Now, that kind of learning is finally accessible — through Nirmaan.",
   ],
   title: "One session. That's all it takes.",
-  ctaPrimary: "Start a Free Lesson →",
+  ctaPrimary: "Start a Free Lesson",
   ctaSecondary: "Talk to Our Team",
   backToTop: "Back to top \u2191",
 };
@@ -297,16 +309,9 @@ export const footer = {
         { label: "Contact", href: "#contact" },
       ],
     },
-    {
-      heading: "LEGAL",
-      links: [
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
-      ],
-    },
   ],
   bottom: {
-    copyright: "\u00A9 2026 Nirmaan Education. All rights reserved.",
+    copyright: "\u00A9 2026 Nirmaan Learning LLP. All rights reserved.",
     links: [
       { label: "Privacy", href: "#" },
       { label: "Terms", href: "#" },

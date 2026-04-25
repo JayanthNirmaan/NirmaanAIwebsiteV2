@@ -3,8 +3,10 @@
 import { useEffect, useRef } from "react";
 import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
+import { FlowButton } from "@/components/ui/FlowButton";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { StatTile } from "@/components/ui/StatTile";
+import { useWaitlist } from "@/components/ui/WaitlistContext";
 import { useCases } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -19,6 +21,7 @@ function em(html: string) {
 }
 
 export function UseCases() {
+  const { open: openWaitlist } = useWaitlist();
   const rootRef = useRef<HTMLElement | null>(null);
   const headRef = useRef<HTMLDivElement | null>(null);
   const gridRef = useRef<HTMLDivElement | null>(null);
@@ -93,7 +96,7 @@ export function UseCases() {
           />
         </div>
 
-        <div ref={gridRef} className="grid grid-2" style={{ alignItems: "stretch" }}>
+        <div ref={gridRef} className="grid grid-2" style={{ alignItems: "stretch", paddingTop: 20 }}>
           {/* Students */}
           <Card style={{ padding: 28, display: "flex", flexDirection: "column", justifyContent: "space-between", background: "var(--orange-500)" }}>
             <div>
@@ -102,32 +105,20 @@ export function UseCases() {
               <p className="t-body-lg" style={{ marginTop: 16, color: "rgba(255,255,255,0.92)" }}>{useCases.student.body}</p>
             </div>
             <div className="subject-chips" style={{ marginTop: 20 }}>
-              {useCases.student.subjects.map((s) => (
-                <Chip key={s.label} variant={s.variant}>{s.label}</Chip>
-              ))}
-              <Chip variant="default">{useCases.student.more}</Chip>
+              <FlowButton variant="light" size="sm" onClick={openWaitlist}>Download the app</FlowButton>
             </div>
           </Card>
 
           {/* Schools */}
           <Card dark style={{ padding: 28, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <Chip variant="dark">Schools</Chip>
+              <Chip variant="dark" style={{ background: "#fff", color: "#000", borderColor: "#fff" }}>Schools</Chip>
               <h3 className="t-h2" style={{ marginTop: 16, color: "#fff" }}>{useCases.school.heading}</h3>
               <p className="t-body-lg" style={{ marginTop: 16, color: "rgba(255,255,255,0.72)" }}>{useCases.school.body}</p>
             </div>
 
-            <div
-              style={{
-                marginTop: 20,
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 10,
-              }}
-            >
-              {useCases.school.stats.map((s, i) => (
-                <StatTile key={i} num={s.num} label={s.label} suffix={s.suffix} />
-              ))}
+            <div style={{ marginTop: 20 }}>
+              <FlowButton variant="light" size="sm" onClick={openWaitlist}>Connect to know more</FlowButton>
             </div>
           </Card>
         </div>

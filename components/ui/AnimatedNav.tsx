@@ -105,7 +105,7 @@ export function AnimatedNav() {
         overflow: "hidden",
         borderRadius: "999px",
         border: "none",
-        background: "rgba(241,219,206,0.88)",
+        background: "rgba(241,219,206,0.06)",
         backdropFilter: "saturate(180%) blur(16px)",
         WebkitBackdropFilter: "saturate(180%) blur(16px)",
         boxShadow: "0 4px 24px -4px rgba(16,16,18,0.14), 0 0 0 1px #FF9068",

@@ -63,7 +63,7 @@ export function SIMPower() {
     <section className="section section--dark" id="sim" ref={rootRef}>
       <InteractiveGrid cols={28} rows={10} style={{ opacity: 0.5 }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div className="grid grid-2" style={{ alignItems: "center", gap: 64 }}>
+        <div className="grid grid-2" style={{ alignItems: "center", gap: 0, gridTemplateColumns: "1.8fr 1fr" }}>
           {/* Copy — left column */}
           <div ref={copyColRef}>
             <Kicker style={{ color: "var(--orange-500)", fontWeight: 700 }}>{simPower.kicker}</Kicker>
@@ -72,7 +72,7 @@ export function SIMPower() {
                 <span key={i} style={{ display: "block", color: i > 0 ? "var(--orange-500)" : undefined }}>{line}</span>
               ))}
             </h2>
-            <ul style={{ listStyle: "none", padding: 0, margin: "32px 0 0", display: "flex", flexDirection: "column", gap: 18 }}>
+            <ul style={{ listStyle: "none", padding: 0, margin: "32px 0 0", display: "flex", flexDirection: "column", gap: 9 }}>
               {simPower.bullets.map((b, i) => (
                 <li key={i} className="sim-bullet" style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                   <span style={{
@@ -91,7 +91,7 @@ export function SIMPower() {
                       <path d="M1 3.5L4 6.5L10 1" stroke="#FF5A1F" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
-                  <span className="t-body-lg" style={{ color: "rgba(255,255,255,0.85)", fontSize: 16 }}>{b.text}</span>
+                  <span className="t-body-lg" style={{ color: "rgba(255,255,255,0.85)", fontSize: 14 }}>{b.text}</span>
                 </li>
               ))}
             </ul>

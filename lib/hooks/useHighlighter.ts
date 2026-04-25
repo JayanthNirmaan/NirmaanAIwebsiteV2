@@ -12,12 +12,14 @@ export function useHighlighter<T extends HTMLElement = HTMLSpanElement>() {
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.classList.add("is-on");
-            io.unobserve(e.target);
+            const target = e.target as HTMLElement;
+            target.classList.remove("is-on");
+            void target.offsetWidth;
+            target.classList.add("is-on");
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.5 }
     );
     io.observe(el);
     return () => io.disconnect();

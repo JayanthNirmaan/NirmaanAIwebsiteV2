@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40" viewBox="0 0 120 40">
+  <rect width="120" height="40" rx="6" fill="rgba(255,255,255,0.08)"/>
+  <rect x="10" y="10" width="20" height="20" rx="10" fill="rgba(255,255,255,0.3)"/>
+  <rect x="38" y="14" width="72" height="5" rx="2" fill="rgba(255,255,255,0.25)"/>
+  <rect x="38" y="23" width="50" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
+</svg>

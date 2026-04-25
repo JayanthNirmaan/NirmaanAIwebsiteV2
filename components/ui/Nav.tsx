@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FlowButton } from "./FlowButton";
 import { AnimatedNav } from "./AnimatedNav";
+import { useWaitlist } from "./WaitlistContext";
 import { nav } from "@/content/home";
 import { registerGSAP, gsap } from "@/lib/gsap";
 
@@ -11,6 +12,7 @@ export function Nav() {
   const logoRef = useRef<HTMLDivElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { open: openWaitlist } = useWaitlist();
 
   /* Entrance: logo + CTA slide down on load */
   useEffect(() => {
@@ -56,7 +58,7 @@ export function Nav() {
 
         {/* CTA island */}
         <div ref={ctaRef} className="nav-island nav-island--cta">
-          <FlowButton href="#contact" size="sm" variant="accent">{nav.demo}</FlowButton>
+          <FlowButton size="sm" variant="accent" onClick={openWaitlist}>{nav.demo}</FlowButton>
         </div>
 
         {/* Mobile burger (hidden on desktop) */}
@@ -90,7 +92,7 @@ export function Nav() {
           </a>
         ))}
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
-          <FlowButton href="#contact" variant="accent">{nav.demo}</FlowButton>
+          <FlowButton variant="accent" onClick={() => { setMenuOpen(false); openWaitlist(); }}>{nav.demo}</FlowButton>
         </div>
       </div>
     </>

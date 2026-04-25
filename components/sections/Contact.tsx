@@ -133,9 +133,9 @@ export function Contact() {
         <div className="grid grid-2" style={{ alignItems: "stretch" }}>
           {/* Form */}
           <div ref={formCardRef}>
-            <Card style={{ padding: 40 }}>
+            <Card style={{ padding: 20 }}>
               {sent ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start", padding: "40px 0" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "flex-start", padding: "20px 0" }}>
                   <Chip variant="mint">{contact.form.sentChip}</Chip>
                   <p className="t-body-lg">{contact.form.sentLine}</p>
                   <button
@@ -147,7 +147,7 @@ export function Contact() {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit(onSubmit)} style={{ display: "grid", gap: 20 }} noValidate>
+                <form onSubmit={handleSubmit(onSubmit)} style={{ display: "grid", gap: 12 }} noValidate>
                   <div className="field">
                     <label className="label" htmlFor="name">{contact.form.nameLabel}</label>
                     <input

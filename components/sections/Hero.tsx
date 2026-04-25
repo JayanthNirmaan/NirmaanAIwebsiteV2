@@ -9,10 +9,12 @@ import { InteractiveGrid } from "@/components/ui/InteractiveGrid";
 import { PhoneFrame } from "@/components/ui/PhoneFrame";
 import { BellCurve } from "@/components/illustrations/BellCurve";
 import { SignatureWaves } from "@/components/illustrations/SignatureWaves";
+import { useWaitlist } from "@/components/ui/WaitlistContext";
 import { hero } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
 
 export function Hero() {
+  const { open: openWaitlist } = useWaitlist();
   const sectionRef = useRef<HTMLElement | null>(null);
   const phoneRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -131,7 +133,7 @@ export function Hero() {
               <span className="hero-word" style={{ display: "inline-block" }}>&nbsp;that actually teaches,</span>
             </span>
             <span style={{ display: "block", whiteSpace: "nowrap" }}>
-              <span className="hero-word" style={{ display: "inline-block" }}>just like a&nbsp;</span>
+              <span className="hero-word" style={{ display: "inline-block" }}>just like a&nbsp;&nbsp;&nbsp;</span>
               <span className="hero-word em hero-human-teacher" style={{ display: "inline-block", fontWeight: 400, fontStyle: "italic", color: "var(--orange-500)" }}>
                 <Highlighter variant="circle">human teacher.</Highlighter>
               </span>
@@ -141,7 +143,7 @@ export function Hero() {
           <p className="hero__sub" ref={subRef} style={{ marginTop: 90, fontSize: "clamp(10px, 1.35vw, 16px)", fontStyle: "italic", opacity: 0.85, textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Finally, learning that feels personal.</p>
 
           <div className="hero__ctas" ref={ctaRef} style={{ marginTop: 25, display: "flex", flexDirection: "row", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-            <FlowButton href="#contact" variant="accent">{hero.ctaPrimary}</FlowButton>
+            <FlowButton variant="accent" onClick={openWaitlist}>{hero.ctaPrimary}</FlowButton>
             <FlowButton href="#demo" variant="light">{hero.ctaSecondary}</FlowButton>
           </div>
 

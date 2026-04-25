@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { Marquee } from "@/components/ui/Marquee";
 import { trustLogos } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
@@ -24,7 +25,6 @@ export function TrustLogos() {
         });
       }
 
-      // Fade + clip the whole section in
       if (rootRef.current) {
         gsap.from(rootRef.current, {
           opacity: 0,
@@ -48,13 +48,18 @@ export function TrustLogos() {
       </div>
       <Marquee>
         {trustLogos.logos.map((l) => (
-          <span key={l} className="marquee__item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-              <path d="M12 2 L2 7 L12 12 L22 7 Z" />
-              <path d="M2 17 L12 22 L22 17" />
-              <path d="M2 12 L12 17 L22 12" />
-            </svg>
-            {l}
+          <span key={l.src} className="marquee__item">
+            <Image
+              src={l.src}
+              alt={l.alt}
+              width={160}
+              height={60}
+              style={{
+                width: "auto",
+                height: 48,
+                objectFit: "contain",
+              }}
+            />
           </span>
         ))}
       </Marquee>

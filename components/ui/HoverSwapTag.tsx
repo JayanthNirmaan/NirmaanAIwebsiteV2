@@ -28,25 +28,25 @@ export function HoverSwapTag({
         borderRadius: 999,
         border: "1px solid rgba(10, 10, 11, 0.08)",
         background:
-          "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 227, 209, 0.85) 50%, rgba(255, 198, 163, 0.75) 100%)",
+          "linear-gradient(135deg, rgba(60, 60, 65, 0.95) 0%, rgba(40, 40, 45, 0.85) 50%, rgba(30, 30, 35, 0.75) 100%)",
         padding: "10px 18px",
         cursor: "pointer",
         transition: "all 500ms cubic-bezier(0.22, 1, 0.36, 1)",
         font: "inherit",
-        color: "var(--fg)",
+        color: "#ffffff",
         boxShadow: "0 1px 2px rgba(16, 16, 18, 0.04)",
       }}
       onMouseOver={(e) => {
-        e.currentTarget.style.borderColor = "rgba(255, 90, 31, 0.35)";
+        e.currentTarget.style.borderColor = "rgba(16, 185, 129, 0.35)";
         e.currentTarget.style.background =
-          "linear-gradient(135deg, rgba(255, 244, 238, 1) 0%, rgba(255, 198, 163, 0.95) 50%, rgba(255, 162, 116, 0.85) 100%)";
+          "linear-gradient(135deg, rgba(50, 55, 50, 1) 0%, rgba(35, 45, 38, 0.95) 50%, rgba(30, 40, 32, 0.85) 100%)";
         e.currentTarget.style.boxShadow =
-          "0 6px 24px rgba(255, 90, 31, 0.18), 0 0 0 1px rgba(255, 90, 31, 0.12)";
+          "0 6px 24px rgba(16, 185, 129, 0.18), 0 0 0 1px rgba(16, 185, 129, 0.12)";
       }}
       onMouseOut={(e) => {
         e.currentTarget.style.borderColor = "rgba(10, 10, 11, 0.08)";
         e.currentTarget.style.background =
-          "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 227, 209, 0.85) 50%, rgba(255, 198, 163, 0.75) 100%)";
+          "linear-gradient(135deg, rgba(60, 60, 65, 0.95) 0%, rgba(40, 40, 45, 0.85) 50%, rgba(30, 30, 35, 0.75) 100%)";
         e.currentTarget.style.boxShadow = "0 1px 2px rgba(16, 16, 18, 0.04)";
       }}
     >
@@ -125,7 +125,7 @@ export function HoverSwapTag({
             fontSize: 14,
             fontWeight: 500,
             whiteSpace: "nowrap",
-            color: "var(--orange-600)",
+            color: "#059669",
             fontStyle: "italic",
             transition: "transform 500ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms",
             transform: isHovered ? "translateY(0)" : "translateY(110%)",

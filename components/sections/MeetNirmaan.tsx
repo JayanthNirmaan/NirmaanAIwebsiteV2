@@ -11,6 +11,7 @@ export function MeetNirmaan() {
   const headRef = useRef<HTMLDivElement | null>(null);
   const stackRef = useRef<HTMLDivElement | null>(null);
   const closingRef = useRef<HTMLParagraphElement | null>(null);
+  const videoRefs = useRef<HTMLVideoElement[]>([]);
 
   useEffect(() => {
     registerGSAP();
@@ -88,9 +89,27 @@ export function MeetNirmaan() {
       }
     }, rootRef);
 
+    // Play each video when it's visible, pause when not
+    const videos = videoRefs.current;
+    const observers = videos.map((video) => {
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        },
+        { threshold: 0.3 }
+      );
+      obs.observe(video);
+      return obs;
+    });
+
     return () => {
       ctx.revert();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      observers.forEach((obs) => obs.disconnect());
     };
   }, []);
 
@@ -119,12 +138,15 @@ export function MeetNirmaan() {
             <div key={i} className="mn-card-wrap">
               <article className="mn-card">
                 <div className="mn-card__media">
-                  <div className="mn-phone-placeholder">
-                    <div className="mn-phone-placeholder__screen">
-                      <span className="mn-phone-placeholder__label">Feature {i + 1}</span>
-                      <span className="mn-phone-placeholder__sub">Video preview</span>
-                    </div>
-                  </div>
+                  <video
+                    src={`/MeetNirmaan/Feature${[1, 3, 4, 2][i]}.mp4`}
+                    muted
+                    playsInline
+                    loop
+                    preload="auto"
+                    className="mn-card__video"
+                    ref={(el) => { if (el) videoRefs.current[i] = el; }}
+                  />
                 </div>
                 <div className="mn-card__content">
                   <div className="mn-card__index">0{i + 1}</div>
@@ -144,8 +166,8 @@ export function MeetNirmaan() {
         </div>
 
         <p ref={closingRef} className="t-h3" style={{ textAlign: "center", marginTop: 64, maxWidth: 800, marginInline: "auto", fontSize: 18 }}>
-          The tutor every child deserves at the{" "}
-          <Highlighter variant="marker-orange">cost of computation</Highlighter>.
+          So learning finally feels {" "}
+          <Highlighter variant="marker-yellow">Fun, Enjoyable and Personal</Highlighter>.
         </p>
       </div>
     </section>

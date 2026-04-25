@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Inter, Caveat } from "next/font/google";
 import "./globals.css";
+import { WaitlistProvider } from "@/components/ui/WaitlistContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -47,7 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${caveat.variable}`}>
       <body>
-        {children}
+        <WaitlistProvider>
+          {children}
+        </WaitlistProvider>
         {/* Analytics slot — drop a snippet here when ready. */}
         <Script id="analytics-slot" strategy="afterInteractive">{`/* analytics pixel goes here */`}</Script>
       </body>

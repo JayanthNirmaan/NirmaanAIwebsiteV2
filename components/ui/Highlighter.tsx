@@ -3,7 +3,7 @@
 import React from "react";
 import { useHighlighter } from "@/lib/hooks/useHighlighter";
 
-type Variant = "orange" | "violet" | "sky" | "marker-sky" | "marker-orange" | "marker-yellow" | "marker-mint" | "circle";
+type Variant = "orange" | "violet" | "sky" | "marker-sky" | "marker-orange" | "marker-yellow" | "marker-mint" | "marker-green" | "circle";
 
 const variantClass: Record<Variant, string> = {
   orange: "hl--orange",
@@ -13,6 +13,7 @@ const variantClass: Record<Variant, string> = {
   "marker-orange": "hl--marker hl--orange",
   "marker-yellow": "hl--marker hl--yellow",
   "marker-mint": "hl--marker hl--mint",
+  "marker-green": "hl--marker hl--green",
   circle: "hl--circle",
 };
 
