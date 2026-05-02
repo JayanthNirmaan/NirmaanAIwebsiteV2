@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Inter, Caveat } from "next/font/google";
 import "./globals.css";
@@ -41,6 +41,12 @@ export const metadata: Metadata = {
       "Personalized learning used to be a luxury of the top 1%. Nirmaan collapses it to the cost of computation.",
     images: ["/og-image.png"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

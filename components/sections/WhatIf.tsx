@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Highlighter } from "@/components/ui/Highlighter";
 import { whatIf } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 // Icon per bullet — simple SVG outlines tinted by variant color
 const icons = [
@@ -77,6 +78,7 @@ function highlightBullet(text: string, phrase: string, color: string) {
 }
 
 export function WhatIf() {
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const cardsRef = useRef<HTMLDivElement | null>(null);
@@ -99,8 +101,12 @@ export function WhatIf() {
       if (cardsRef.current) {
         const cards = Array.from(cardsRef.current.children) as HTMLElement[];
 
-        // Set initial state: scaled down + invisible
-        gsap.set(cards, { y: 48, opacity: 0, scale: 0.88, transformOrigin: "center bottom" });
+        // On mobile, show cards immediately — animation fires when scrolled in
+        if (isMobile) {
+          gsap.set(cards, { clearProps: "all" });
+        } else {
+          gsap.set(cards, { y: 48, opacity: 0, scale: 0.88, transformOrigin: "center bottom" });
+        }
 
         ScrollTrigger.create({
           trigger: cardsRef.current,
@@ -115,44 +121,43 @@ export function WhatIf() {
               stagger: 0.1,
             });
           },
-          onLeave: () => {
-            gsap.to(cards, {
-              scale: 0.92,
-              opacity: 0,
-              duration: 0.45,
-              ease: "power2.in",
-              stagger: 0.06,
-            });
-          },
-          onEnterBack: () => {
-            gsap.to(cards, {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              duration: 0.55,
-              ease: "power3.out",
-              stagger: 0.08,
-            });
-          },
-          onLeaveBack: () => {
-            gsap.to(cards, {
-              y: 48,
-              opacity: 0,
-              scale: 0.88,
-              duration: 0.4,
-              ease: "power2.in",
-              stagger: 0.06,
-            });
-          },
+          ...(!isMobile && {
+            onLeave: () => {
+              gsap.to(cards, {
+                scale: 0.92,
+                opacity: 0,
+                duration: 0.45,
+                ease: "power2.in",
+                stagger: 0.06,
+              });
+            },
+            onEnterBack: () => {
+              gsap.to(cards, {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 0.55,
+                ease: "power3.out",
+                stagger: 0.08,
+              });
+            },
+            onLeaveBack: () => {
+              gsap.to(cards, {
+                y: 48,
+                opacity: 0,
+                scale: 0.88,
+                duration: 0.4,
+                ease: "power2.in",
+                stagger: 0.06,
+              });
+            },
+          }),
         });
       }
     }, rootRef);
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
+    return () => { ctx.revert(); };
+  }, [isMobile]);
 
   return (
     <section
@@ -161,20 +166,21 @@ export function WhatIf() {
       ref={rootRef}
       style={{ background: "var(--ink-50)" }}
     >
-      <div style={{ width: "100%", padding: "20px 5%" }}>
+      <div style={{ width: "100%", padding: isMobile ? "20px 20px" : "20px 5%" }}>
         {/* Heading */}
         <h2
           ref={titleRef}
           className="t-h1"
           style={{
             width: "100%",
-            marginBottom: 56,
+            marginBottom: isMobile ? 32 : 56,
             lineHeight: 1.18,
             textAlign: "center",
             fontSize: "inherit",
+            padding: isMobile ? "0 10px" : undefined,
           }}
         >
-          <span style={{ fontSize: "clamp(18px, 3.8vw, 50px)", display: "block" }}>
+          <span style={{ fontSize: isMobile ? "20px" : "clamp(18px, 3.8vw, 50px)", display: "block" }}>
             {whatIf.titlePre}{" "}
             <Highlighter variant="marker-yellow">{whatIf.titleHl}</Highlighter>
           </span>
@@ -188,7 +194,7 @@ export function WhatIf() {
           ref={cardsRef}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(auto-fit, minmax(220px, 1fr))",
             gap: 20,
           }}
         >
@@ -201,14 +207,14 @@ export function WhatIf() {
                 key={i}
                 style={{
                   background: "var(--white)",
-                  borderRadius: 20,
-                  padding: "28px 28px 24px",
-                  boxShadow: "var(--shadow-sm)",
+                  borderRadius: 24,
+                  padding: "10px",
+                  boxShadow: "0 2px 4px rgba(16, 16, 18, .10), 0 0 0 1px rgba(16, 16, 18, .08)",
                   display: "flex",
                   flexDirection: "column",
                   gap: 16,
                   position: "relative",
-                  minHeight: 200,
+                  minHeight: isMobile ? 140 : 200,
                   transition: "transform 0.25s ease, box-shadow 0.25s ease",
                 }}
                 onMouseEnter={e => {
@@ -217,7 +223,7 @@ export function WhatIf() {
                 }}
                 onMouseLeave={e => {
                   (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = "var(--shadow-sm)";
+                  (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 4px rgba(16, 16, 18, .10), 0 0 0 1px rgba(16, 16, 18, .08)";
                 }}
               >
                 {/* Icon badge */}

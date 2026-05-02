@@ -7,8 +7,10 @@ import { Kicker } from "@/components/ui/Kicker";
 import { AnimatedBrain } from "@/components/illustrations/AnimatedBrain";
 import { simPower } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 export function SIMPower() {
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const brainColRef = useRef<HTMLDivElement | null>(null);
   const copyColRef = useRef<HTMLDivElement | null>(null);
@@ -63,7 +65,7 @@ export function SIMPower() {
     <section className="section section--dark" id="sim" ref={rootRef}>
       <InteractiveGrid cols={28} rows={10} style={{ opacity: 0.5 }} />
       <div className="container" style={{ position: "relative", zIndex: 1 }}>
-        <div className="grid grid-2" style={{ alignItems: "center", gap: 0, gridTemplateColumns: "1.8fr 1fr" }}>
+        <div className="grid grid-2" style={{ alignItems: "center", gap: 0, gridTemplateColumns: isMobile ? "1fr" : "1.8fr 1fr" }}>
           {/* Copy — left column */}
           <div ref={copyColRef}>
             <Kicker style={{ color: "var(--orange-500)", fontWeight: 700 }}>{simPower.kicker}</Kicker>
@@ -104,7 +106,7 @@ export function SIMPower() {
           </div>
 
           {/* Animated brain — right column */}
-          <div ref={brainColRef} style={{ display: "grid", placeItems: "center", minHeight: 380 }}>
+          <div ref={brainColRef} style={{ display: "grid", placeItems: "center", minHeight: isMobile ? 200 : 380, marginTop: isMobile ? 32 : 0 }}>
             <AnimatedBrain style={{ width: "100%", maxWidth: 420 }} />
           </div>
         </div>

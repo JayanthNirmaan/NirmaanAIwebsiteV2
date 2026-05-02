@@ -27,9 +27,11 @@ export function SignatureWaves() {
     const updateWaves = () => {
       time += 0.005;
       const width = window.innerWidth;
-      const height = window.innerHeight;
-      const mid = 0.5;
-      const amp = isMobile ? 0.2 : 0.3;
+      const height = containerRef.current
+        ? containerRef.current.offsetHeight || window.innerHeight
+        : window.innerHeight;
+      const mid = isMobile ? 0.6 : 0.5;
+      const amp = isMobile ? 0.15 : 0.3;
 
       const generateWave = (phaseOff: number, speedOff: number = 1) => {
         const d = [];
@@ -70,7 +72,7 @@ export function SignatureWaves() {
   }, [isMobile]);
 
   return (
-    <div ref={containerRef} style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div ref={containerRef} style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "visible", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <svg style={{ width: "100%", height: "100%", willChange: "transform" }} preserveAspectRatio="none">
         <path
           ref={wave1Ref}

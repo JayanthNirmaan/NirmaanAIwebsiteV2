@@ -5,8 +5,10 @@ import Image from "next/image";
 import { Marquee } from "@/components/ui/Marquee";
 import { trustLogos } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 export function TrustLogos() {
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
 
@@ -42,7 +44,7 @@ export function TrustLogos() {
   }, []);
 
   return (
-    <section className="section section--dark" style={{ padding: "80px 0" }} ref={rootRef}>
+    <section className="section section--dark" style={{ padding: isMobile ? "48px 0" : "80px 0" }} ref={rootRef}>
       <div ref={headerRef} className="container" style={{ textAlign: "center", marginBottom: 32 }}>
         <div className="t-micro">{trustLogos.header}</div>
       </div>
