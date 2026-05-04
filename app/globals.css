@@ -1159,10 +1159,10 @@ button {
 
 .hl--circle .hl__svg {
   top: -30%;
-  left: -15px;
+  left: -25px;
   right: -27px;
   bottom: auto;
-  width: calc(100% + 10% - 6px);
+  width: calc(100% + 10% + 4px);
   height: 150%;
 }
 
