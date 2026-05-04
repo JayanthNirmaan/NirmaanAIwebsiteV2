@@ -10,11 +10,13 @@ import { PhoneFrame } from "@/components/ui/PhoneFrame";
 import { BellCurve } from "@/components/illustrations/BellCurve";
 import { SignatureWaves } from "@/components/illustrations/SignatureWaves";
 import { useWaitlist } from "@/components/ui/WaitlistContext";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 import { hero } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
 
 export function Hero() {
   const { open: openWaitlist } = useWaitlist();
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement | null>(null);
   const phoneRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -127,22 +129,22 @@ export function Hero() {
             />
           </div>
 
-          <h1 ref={titleRef} className="hero__title t-display" style={{ fontSize: "clamp(20px, 5vw, 58px)", whiteSpace: "nowrap", fontWeight: 400, lineHeight: 1.05, marginTop: 25, letterSpacing: "-0.02em" }}>
-            <span style={{ display: "block", whiteSpace: "nowrap" }}>
+          <h1 ref={titleRef} className="hero__title t-display" style={{ fontSize: isMobile ? "clamp(32px, 9vw, 48px)" : "clamp(20px, 5vw, 58px)", whiteSpace: isMobile ? "normal" : "nowrap", fontWeight: 400, lineHeight: 1.12, marginTop: isMobile ? 12 : 25, letterSpacing: "-0.02em" }}>
+            <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap" }}>
               <span className="hero-word" style={{ display: "inline-block", fontWeight: 600 }}>An AI tutor</span>
               <span className="hero-word" style={{ display: "inline-block" }}>&nbsp;that actually teaches,</span>
             </span>
-            <span style={{ display: "block", whiteSpace: "nowrap" }}>
-              <span className="hero-word" style={{ display: "inline-block" }}>just like a&nbsp;&nbsp;&nbsp;</span>
+            <span style={{ display: "block", whiteSpace: isMobile ? "normal" : "nowrap" }}>
+              <span className="hero-word" style={{ display: "inline-block" }}>just like a&nbsp;</span>
               <span className="hero-word em hero-human-teacher" style={{ display: "inline-block", fontWeight: 400, fontStyle: "italic", color: "var(--orange-500)" }}>
                 <Highlighter variant="circle">human teacher.</Highlighter>
               </span>
             </span>
           </h1>
 
-          <p className="hero__sub" ref={subRef} style={{ marginTop: 90, fontSize: "clamp(10px, 1.35vw, 16px)", fontStyle: "italic", opacity: 0.85, textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Finally, learning that feels personal.</p>
+          <p className="hero__sub" ref={subRef} style={{ marginTop: isMobile ? 48 : 90, fontSize: isMobile ? "16px" : "clamp(10px, 1.35vw, 16px)", fontStyle: "italic", opacity: 0.85, textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Finally, learning that feels personal.</p>
 
-          <div className="hero__ctas" ref={ctaRef} style={{ marginTop: 25, display: "flex", flexDirection: "row", gap: 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+          <div className="hero__ctas" ref={ctaRef} style={{ marginTop: isMobile ? 28 : 25, display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 10 : 16, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
             <FlowButton variant="accent" onClick={openWaitlist}>{hero.ctaPrimary}</FlowButton>
             <FlowButton href="#demo" variant="light">{hero.ctaSecondary}</FlowButton>
           </div>
@@ -150,7 +152,7 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="scroll-indicator" style={{ position: "absolute", bottom: "5%", right: "5%", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "2px", color: "var(--muted)" }}>
+      <div className="scroll-indicator" style={{ position: "absolute", bottom: "5%", right: "5%", display: isMobile ? "none" : "flex", flexDirection: "column", alignItems: "center", gap: 8, fontFamily: "'JetBrains Mono', monospace", fontSize: 12, letterSpacing: "2px", color: "var(--muted)" }}>
         <span style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit" }}>SCROLL</span>
         <div className="scroll-arrow" style={{ width: 1, height: 40, background: "linear-gradient(to bottom, var(--muted), transparent)", borderRadius: 1, position: "relative" }}>
           <div

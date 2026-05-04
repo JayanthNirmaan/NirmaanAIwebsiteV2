@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { InteractiveGrid } from "@/components/ui/InteractiveGrid";
 import { problemScenes } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 const SCENE_ILLUSTRATIONS = [
   () => <img src="/Problemstory/Problemstory1.png" alt="" aria-hidden className="pstory__illustration" />,
@@ -12,6 +13,7 @@ const SCENE_ILLUSTRATIONS = [
 ];
 
 export function ProblemStory() {
+  const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const dotsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -25,6 +27,39 @@ export function ProblemStory() {
     if (!section || !track) return;
 
     const ctx = gsap.context(() => {
+      if (isMobile) {
+        // Mobile: panels are visible by default, simple scroll-reveal
+        const panels = track.querySelectorAll<HTMLElement>(".pstory__panel");
+        panels.forEach((panel) => {
+          const img = panel.querySelector<HTMLElement>(".pstory__img-wrap");
+          const text = panel.querySelector<HTMLElement>(".pstory__text-col");
+
+          // Ensure visible immediately — animation is a bonus on top
+          if (img)  gsap.set(img,  { clearProps: "all" });
+          if (text) gsap.set(text, { clearProps: "all" });
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            }
+          });
+
+          if (img) tl.fromTo(img,
+            { y: 40, opacity: 0, scale: 0.92 },
+            { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power4.out" },
+            0
+          );
+          if (text) tl.fromTo(text,
+            { y: 24, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.75, ease: "power3.out" },
+            0.18
+          );
+        });
+        return;
+      }
+
       const panels = track.querySelectorAll<HTMLElement>(".pstory__panel");
       const totalPanels = panels.length;
 
@@ -165,7 +200,7 @@ export function ProblemStory() {
     }, sectionRef);
 
     return () => { ctx.revert(); };
-  }, []);
+  }, [isMobile]);
 
   return (
     <section className="pstory" id="why" ref={sectionRef}>

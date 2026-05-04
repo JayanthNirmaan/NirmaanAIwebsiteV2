@@ -1,17 +1,64 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Highlighter } from "@/components/ui/Highlighter";
 import { InteractiveGrid } from "@/components/ui/InteractiveGrid";
 import { meetNirmaan } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 export function MeetNirmaan() {
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const headRef = useRef<HTMLDivElement | null>(null);
   const stackRef = useRef<HTMLDivElement | null>(null);
   const closingRef = useRef<HTMLParagraphElement | null>(null);
   const videoRefs = useRef<HTMLVideoElement[]>([]);
+
+  // Mobile swipe carousel state
+  const [activeCard, setActiveCard] = useState(0);
+  const [popupKey, setPopupKey] = useState(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const n = meetNirmaan.cards.length;
+
+  const goTo = useCallback((idx: number) => {
+    const next = Math.max(0, Math.min(n - 1, idx));
+    setActiveCard(next);
+    setPopupKey((k) => k + 1);
+  }, [n]);
+
+  const resetAutoAdvance = useCallback(() => {
+    if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
+    autoAdvanceRef.current = setTimeout(() => {
+      setActiveCard((cur) => {
+        const next = (cur + 1) % n;
+        setPopupKey((k) => k + 1);
+        return next;
+      });
+    }, 6000);
+  }, [n]);
+
+  // Start auto-advance on mount (mobile only)
+  useEffect(() => {
+    if (!isMobile) return;
+    resetAutoAdvance();
+    return () => { if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current); };
+  }, [isMobile, activeCard, resetAutoAdvance]);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    const dx = touchStartX.current - e.changedTouches[0].clientX;
+    const dy = Math.abs(touchStartY.current - e.changedTouches[0].clientY);
+    if (Math.abs(dx) < 40 || dy > Math.abs(dx)) return; // ignore small or vertical swipes
+    resetAutoAdvance();
+    goTo(activeCard + (dx > 0 ? 1 : -1));
+  }, [activeCard, goTo, resetAutoAdvance]);
 
   useEffect(() => {
     registerGSAP();
@@ -34,7 +81,7 @@ export function MeetNirmaan() {
         });
       }
 
-      if (!reduced && stackRef.current) {
+      if (!reduced && stackRef.current && !isMobile) {
         const stack = stackRef.current;
         const cards = gsap.utils.toArray<HTMLElement>(".mn-card", stack);
         const n = cards.length;
@@ -89,29 +136,46 @@ export function MeetNirmaan() {
       }
     }, rootRef);
 
-    // Play each video when it's visible, pause when not
-    const videos = videoRefs.current;
-    const observers = videos.map((video) => {
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        },
-        { threshold: 0.3 }
-      );
-      obs.observe(video);
-      return obs;
-    });
+    // Desktop: play each video when it's visible via IntersectionObserver
+    let observers: IntersectionObserver[] = [];
+    if (!isMobile) {
+      const videos = videoRefs.current;
+      observers = videos.map((video) => {
+        const obs = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          },
+          { threshold: 0.3 }
+        );
+        obs.observe(video);
+        return obs;
+      });
+    }
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
       observers.forEach((obs) => obs.disconnect());
     };
-  }, []);
+  }, [isMobile]);
+
+  // Mobile: play the active card's video, pause all others
+  // IntersectionObserver doesn't work with CSS transform-based carousels
+  useEffect(() => {
+    if (!isMobile) return;
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return;
+      if (i === activeCard) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  }, [isMobile, activeCard]);
 
   return (
     <section className="section meet-nirmaan-section" id="solution" ref={rootRef}>
@@ -134,38 +198,95 @@ export function MeetNirmaan() {
         </div>
 
         <div ref={stackRef} className="mn-stack">
-          {meetNirmaan.cards.map((card, i) => (
-            <div key={i} className="mn-card-wrap">
-              <article className="mn-card">
-                <div className="mn-card__media">
-                  <video
-                    src={`/MeetNirmaan/Feature${[1, 3, 4, 2][i]}.mp4`}
-                    muted
-                    playsInline
-                    loop
-                    preload="auto"
-                    className="mn-card__video"
-                    ref={(el) => { if (el) videoRefs.current[i] = el; }}
+          {isMobile ? (
+            /* ── Mobile: horizontal swipe carousel ── */
+            <>
+              <div
+                className="mn-mobile-track"
+                style={{ transform: `translateX(-${activeCard * 100}%)` }}
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
+              >
+                {meetNirmaan.cards.map((card, i) => (
+                  <div
+                    key={i === activeCard ? `active-${popupKey}` : i}
+                    className={`mn-card-wrap${i === activeCard ? ` mn-popup` : ""}`}
+                  >
+                    <article className="mn-card">
+                      <div className="mn-card__media">
+                        <video
+                          src={`/MeetNirmaan/Feature${[1, 3, 4, 2][i]}.mp4`}
+                          muted
+                          playsInline
+                          loop
+                          preload="auto"
+                          className="mn-card__video"
+                          ref={(el) => { if (el) videoRefs.current[i] = el; }}
+                        />
+                      </div>
+                      <div className="mn-card__content">
+                        <div className="mn-card__index">0{i + 1}</div>
+                        <h3 className="mn-card__heading">{card.heading}</h3>
+                        <ul className="mn-card__points">
+                          {card.points?.map((p, j) => (
+                            <li key={j} className="mn-card__point">
+                              <span className="mn-card__dot" aria-hidden />
+                              <span>{p}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </article>
+                  </div>
+                ))}
+              </div>
+              {/* Dot indicators */}
+              <div className="mn-mobile-dots">
+                {meetNirmaan.cards.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`mn-mobile-dot${i === activeCard ? " active" : ""}`}
+                    onClick={() => { resetAutoAdvance(); goTo(i); }}
+                    aria-label={`Card ${i + 1}`}
                   />
-                </div>
-                <div className="mn-card__content">
-                  <div className="mn-card__index">0{i + 1}</div>
-                  <h3 className="mn-card__heading">{card.heading}</h3>
-                  <ul className="mn-card__points">
-                    {card.points?.map((p, j) => (
-                      <li key={j} className="mn-card__point">
-                        <span className="mn-card__dot" aria-hidden />
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            </div>
-          ))}
+                ))}
+              </div>
+            </>
+          ) : (
+            /* ── Desktop: GSAP stacked cards ── */
+            meetNirmaan.cards.map((card, i) => (
+              <div key={i} className="mn-card-wrap">
+                <article className="mn-card">
+                  <div className="mn-card__media">
+                    <video
+                      src={`/MeetNirmaan/Feature${[1, 3, 4, 2][i]}.mp4`}
+                      muted
+                      playsInline
+                      loop
+                      preload="auto"
+                      className="mn-card__video"
+                      ref={(el) => { if (el) videoRefs.current[i] = el; }}
+                    />
+                  </div>
+                  <div className="mn-card__content">
+                    <div className="mn-card__index">0{i + 1}</div>
+                    <h3 className="mn-card__heading">{card.heading}</h3>
+                    <ul className="mn-card__points">
+                      {card.points?.map((p, j) => (
+                        <li key={j} className="mn-card__point">
+                          <span className="mn-card__dot" aria-hidden />
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              </div>
+            ))
+          )}
         </div>
 
-        <p ref={closingRef} className="t-h3" style={{ textAlign: "center", marginTop: 64, maxWidth: 800, marginInline: "auto", fontSize: 18 }}>
+        <p ref={closingRef} className="t-h3" style={{ textAlign: "center", marginTop: isMobile ? 32 : 64, maxWidth: 800, marginInline: "auto", fontSize: 18 }}>
           So learning finally feels {" "}
           <Highlighter variant="marker-yellow">Fun, Enjoyable and Personal</Highlighter>.
         </p>

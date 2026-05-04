@@ -12,6 +12,7 @@ import { Chip } from "@/components/ui/Chip";
 import { InteractiveGrid } from "@/components/ui/InteractiveGrid";
 import { contact } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 const schema = z.object({
   name: z.string().min(2, "Tell us your name"),
@@ -23,11 +24,25 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export function Contact() {
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const headRef = useRef<HTMLDivElement | null>(null);
   const formCardRef = useRef<HTMLDivElement | null>(null);
   const directCardRef = useRef<HTMLDivElement | null>(null);
+  const scrollBtnRef = useRef<HTMLButtonElement | null>(null);
   const [sent, setSent] = useState(false);
+  const [scrollVisible, setScrollVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrollVisible(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const {
     register,
@@ -208,7 +223,7 @@ export function Contact() {
 
           {/* Direct */}
           <div ref={directCardRef}>
-            <Card style={{ padding: 40, display: "flex", flexDirection: "column", gap: 24, background: "var(--ink-50)" }}>
+            <Card style={{ padding: isMobile ? 24 : 40, display: "flex", flexDirection: "column", gap: 24, background: "var(--ink-50)" }}>
               <h3 className="t-h3">{contact.direct.heading}</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <a href={`mailto:${contact.direct.email}`} style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
@@ -229,6 +244,28 @@ export function Contact() {
           </div>
         </div>
       </div>
+
+      {/* Scroll to top — bottom-left of section */}
+      <button
+        ref={scrollBtnRef}
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+        className={`scroll-top-btn${scrollVisible ? " scroll-top-btn--visible" : ""}`}
+      >
+        <span className="scroll-top-btn__track">
+          <svg
+            className="scroll-top-btn__arrow"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden
+          >
+            <path d="M8 13V3M8 3L3 8M8 3l5 5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+        <span className="scroll-top-btn__label">Top</span>
+      </button>
     </section>
   );
 }

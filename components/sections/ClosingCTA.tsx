@@ -2,10 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { FlowButton } from "@/components/ui/FlowButton";
-import { StoryBgCurve } from "@/components/illustrations/StoryBgCurve";
+import { SignatureWaves } from "@/components/illustrations/SignatureWaves";
 import { useWaitlist } from "@/components/ui/WaitlistContext";
 import { closingCTA } from "@/content/home";
 import { registerGSAP, gsap, ScrollTrigger } from "@/lib/gsap";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 function em(html: string) {
   const parts = html.split(/(<em>[^<]+<\/em>)/g);
@@ -18,6 +19,7 @@ function em(html: string) {
 
 export function ClosingCTA() {
   const { open: openWaitlist } = useWaitlist();
+  const isMobile = useIsMobile();
   const rootRef = useRef<HTMLElement | null>(null);
   const innerRef = useRef<HTMLDivElement | null>(null);
 
@@ -72,23 +74,23 @@ export function ClosingCTA() {
 
   return (
     <section className="story" id="book" ref={rootRef}>
-      <StoryBgCurve />
-      <div className="story__scene" style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <SignatureWaves />
+      <div className="story__scene" style={{ minHeight: isMobile ? 0 : "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div ref={innerRef} className="story__scene-inner in">
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 48 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 8 : 12, marginBottom: isMobile ? 24 : 48 }}>
             {closingCTA.manifesto.map((line, i) => (
               <p
                 key={i}
                 className="manifesto-line t-body-lg"
-                style={{ color: "rgba(255,255,255,0.85)", fontSize: 18 }}
+                style={{ color: "rgba(255,255,255,0.85)", fontSize: isMobile ? 15 : 18 }}
               >
                 {em(line)}
               </p>
             ))}
           </div>
           <h2 className="t-display" style={{ color: "#fff", fontSize: "clamp(20px, 5vw, 60px)" }}>{closingCTA.title}</h2>
-          <div style={{ marginTop: 48, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ marginTop: isMobile ? 24 : 48, display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
             <FlowButton variant="accent" onClick={openWaitlist}>{closingCTA.ctaPrimary}</FlowButton>
             <FlowButton variant="light" href="#contact">{closingCTA.ctaSecondary}</FlowButton>
           </div>
