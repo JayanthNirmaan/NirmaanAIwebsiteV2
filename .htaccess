@@ -1,27 +1,3 @@
-# Serve the Next.js static export from /out as if it were the site root.
-# Hostinger deploys the full repo into public_html; this rewrites every
-# request so visitors see the built site, not the source code.
-
-RewriteEngine On
-RewriteBase /
-
-# Don't rewrite requests that already target /out/
-RewriteRule ^out/ - [L]
-
-# Bare root -> /out/index.html
-RewriteRule ^$ out/index.html [L]
-
-# If a matching file exists under /out/, serve it from there.
-RewriteCond %{DOCUMENT_ROOT}/out/$1 -f
-RewriteRule ^(.+)$ out/$1 [L]
-
-# If a matching directory exists under /out/, serve its index.html.
-RewriteCond %{DOCUMENT_ROOT}/out/$1 -d
-RewriteRule ^(.+?)/?$ out/$1/index.html [L]
-
-# Clean URLs: /about -> /out/about.html
-RewriteCond %{DOCUMENT_ROOT}/out/$1.html -f
-RewriteRule ^(.+)$ out/$1.html [L]
-
-# Fallback 404
-ErrorDocument 404 /out/404.html
+DirectoryIndex index.html
+Options -Indexes
+ErrorDocument 404 /404.html
